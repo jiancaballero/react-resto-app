@@ -35,6 +35,7 @@ const AddItem = ({ state, dispatch, id,categories }) => {
     name: "",
     category: "",
     price: 0,
+    quantity:0,
     description: "",
     image: "",
     isNew: true,
@@ -54,10 +55,12 @@ const AddItem = ({ state, dispatch, id,categories }) => {
   const handleClose = () => {
     setOpen(false);
     showNewCategoryInput(false);
+    
   };
   const handleNewCategoryInput = (e) => {
     setInputCategory(e.target.value);
     setItem({ ...item, category: inputCategory });
+   
   };
 
   const handleKeyPress = (e) => {
@@ -108,6 +111,7 @@ const AddItem = ({ state, dispatch, id,categories }) => {
   //   TODO: DISPLAY ERROR MESSAGES
   return (
     <div>
+     
       <Tooltip placement="left" title="Add Item">
         <Fab
           sx={{ position: "absolute", bottom: 16, right: 16 }}

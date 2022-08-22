@@ -4,6 +4,9 @@ import Cart from "./components/Cart";
 import AddItem from "./components/AddItem";
 import { useReducer, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
+import ItemList from "./components/ItemList";
+import { Route, Routes } from "react-router";
+import FilterMenu from "./components/FilterMenu";
 function App() {
   const initialState = {
     items: [
@@ -12,6 +15,7 @@ function App() {
         name: "Burger",
         category: "Food",
         price: 80,
+        quantity: 0,
         description: "",
         image:
           "https://tmbidigitalassetsazure.blob.core.windows.net/rms3-prod/attachments/37/1200x1200/Smash-Burgers_EXPS_TOHcom20_246232_B10_06_10b.jpg",
@@ -21,11 +25,11 @@ function App() {
         name: "Cake",
         category: "Dessert",
         price: 90,
+        quantity: 0,
         description: "",
         image:
           "https://static.toiimg.com/thumb/53096885.cms?width=1200&height=900",
       },
-      
     ],
   };
 
@@ -47,6 +51,25 @@ function App() {
         console.log(`Order Item: ${action.payload}`);
       }
 
+      case "INCREASE_QUANTITY": {
+        return {
+          items: [
+            ...state.items.map((item) => {
+              if (item.id === action.payload.id) {
+                item.quantity += 1;
+              }
+              return item;
+            }),
+          ],
+        };
+      }
+
+      case "DECREASE_QUANTITY": {
+        if (state.quantity > 0) {
+          return { ...state, quantity: state.quantity - 1 };
+        }
+      }
+
       default: {
         return state;
       }
@@ -55,17 +78,32 @@ function App() {
 
   // define reducer
   const [state, dispatch] = useReducer(reducer, initialState);
-  const categories = state.items.map(item=>item.category).reduce((category,item)=>{
-    if(!category.includes(item)){
-      category.push(item)
-    }
-    return category
-  },[])
-  
-  
+  console.log(state);
+  const categories = state.items
+    .map((item) => item.category)
+    .reduce((category, item) => {
+      if (!category.includes(item)) {
+        category.push(item);
+      }
+      return category;
+    }, []);
+
   return (
     <>
-      <AddItem id={uuidv4()} state={state} dispatch={dispatch} categories={categories}/>
+      <ItemList state={state} dispatch={dispatch} categories={categories} />
+      <AddItem
+        state={state}
+        id={uuidv4()}
+        dispatch={dispatch}
+        categories={categories}
+      />
+
+      {/* <Routes>
+        
+           
+          
+        
+      </Routes> */}
     </>
   );
 }
