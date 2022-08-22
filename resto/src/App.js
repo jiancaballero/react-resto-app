@@ -65,9 +65,18 @@ function App() {
       }
 
       case "DECREASE_QUANTITY": {
-        if (state.quantity > 0) {
-          return { ...state, quantity: state.quantity - 1 };
-        }
+        return {
+          items: [
+            ...state.items.map((item) => {
+              if (item.id === action.payload.id) {
+                if(item.quantity>0){
+                  item.quantity -= 1;
+                }
+              }
+              return item;
+            }),
+          ],
+        };
       }
 
       default: {

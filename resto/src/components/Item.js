@@ -24,15 +24,17 @@ const Item = ({ id, name, price, quantity, description, image, dispatch }) => {
           Add to cart<i class="fa-solid fa-cart-shopping"></i>
         </button>
         <Stack direction="row" component="div">
-          <IconButton
-            aria-label="send"
-            size="large"
-            onClick={() => {
-              dispatch({ type: "DECREASE_QUANTITY" });
-            }}
-          >
-            <RemoveCircleOutlineIcon fontSize="large" />
-          </IconButton>
+          {quantity > 0 && (
+            <IconButton
+              aria-label="send"
+              size="large"
+              onClick={() => {
+                dispatch({ type: "DECREASE_QUANTITY", payload: { id: id } });
+              }}
+            >
+              <RemoveCircleOutlineIcon fontSize="large" />
+            </IconButton>
+          )}
           <h3>{quantity}</h3>
           <IconButton
             aria-label="send"
