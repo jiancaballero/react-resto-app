@@ -46,9 +46,24 @@ const ItemList = ({ state, categories, dispatch }) => {
           </Grid>
         </TabPanel>
 
-        {state.items.map((item) => (
-          <TabPanel value={item.category}></TabPanel>
-        ))}
+        <Grid container >
+          {state.items.map((item) => (
+            <TabPanel value={item.category}>
+              <Grid item>
+                <Item
+                  state={state}
+                  id={item.id}
+                  name={item.name}
+                  price={item.price}
+                  quantity={item.quantity}
+                  description={item.description}
+                  image={item.image}
+                  dispatch={dispatch}
+                />
+              </Grid>
+            </TabPanel>
+          ))}
+        </Grid>
       </TabContext>
     </div>
   );

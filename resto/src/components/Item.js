@@ -5,7 +5,7 @@ import ImageListItemBar from "@mui/material/ImageListItemBar";
 import { Paper, IconButton, Stack, Box, Button } from "@mui/material/";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
-import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 const Item = ({ id, name, price, quantity, description, image, dispatch }) => {
   return (
     <Paper elevation={8} sx={{ borderRadius: "15px 15px 0 0" }}>
@@ -20,9 +20,6 @@ const Item = ({ id, name, price, quantity, description, image, dispatch }) => {
       </div>
       <p>{description}</p>
       <Stack direction="row" justifyContent="space-between">
-        <button>
-          Add to cart<i class="fa-solid fa-cart-shopping"></i>
-        </button>
         <Stack direction="row" component="div">
           {quantity > 0 && (
             <IconButton
@@ -46,6 +43,11 @@ const Item = ({ id, name, price, quantity, description, image, dispatch }) => {
             <AddCircleIcon fontSize="large" />
           </IconButton>
         </Stack>
+        <button className="AddCartButton">
+          <IconButton>
+            <ShoppingCartIcon fontSize="large"/>
+          </IconButton>
+        </button>
       </Stack>
     </Paper>
   );

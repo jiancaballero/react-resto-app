@@ -7,8 +7,19 @@ import { v4 as uuidv4 } from "uuid";
 import ItemList from "./components/ItemList";
 import { Route, Routes } from "react-router";
 import FilterMenu from "./components/FilterMenu";
+import CartNotif from "./components/CartNotif";
 function App() {
   const initialState = {
+    users:[
+      {
+        uID:uuidv4(),
+        role:admin,
+        username:"admin123",
+        password:"password123",
+        firstName:"Admin",
+        lastName:"Resto"
+      }
+    ],
     items: [
       {
         id: uuidv4(),
@@ -31,6 +42,7 @@ function App() {
           "https://static.toiimg.com/thumb/53096885.cms?width=1200&height=900",
       },
     ],
+    cartCount: 0,
   };
 
   //set up reducer
@@ -61,6 +73,7 @@ function App() {
               return item;
             }),
           ],
+          // cartCount: (state.cartCount += 1),
         };
       }
 
@@ -69,13 +82,14 @@ function App() {
           items: [
             ...state.items.map((item) => {
               if (item.id === action.payload.id) {
-                if(item.quantity>0){
+                if (item.quantity > 0) {
                   item.quantity -= 1;
                 }
               }
               return item;
             }),
           ],
+          // cartCount: (state.cartCount -= 1),
         };
       }
 
@@ -87,7 +101,7 @@ function App() {
 
   // define reducer
   const [state, dispatch] = useReducer(reducer, initialState);
-  console.log(state);
+
   const categories = state.items
     .map((item) => item.category)
     .reduce((category, item) => {
@@ -99,7 +113,9 @@ function App() {
 
   return (
     <>
+      
       <ItemList state={state} dispatch={dispatch} categories={categories} />
+      <CartNotif cartCount={state.cartCount} />
       <AddItem
         state={state}
         id={uuidv4()}

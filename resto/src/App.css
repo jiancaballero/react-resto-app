@@ -17,3 +17,11 @@
   display:flex;
   justify-content:space-between;
 }
+.AddCartButton{
+  border:none;
+  border-radius:0px;
+  border-radius:10px 0 0 0;
+}
+.AddCartButton i{
+  font-size:1.5rem;
+}
