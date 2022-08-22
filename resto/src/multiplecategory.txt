@@ -1,0 +1,23 @@
+const items = [{
+  id:1,
+  name:"Burger",
+  category:["Food","Best Seller"]
+},{
+  id:2,
+  name:"Curry",
+  category:["Food","Spicy","Best Seller"]
+  
+},{
+  id:3,
+  name:"Cake",
+  category:["Dessert","Best Seller"]
+}]
+const best = "Food"
+const newItem= [];
+
+const category= items.forEach((e,index)=>{
+  if(e.category.includes(best)){
+    newItem.push(e)
+  }
+})
+console.log(newItem.length) 
