@@ -44,7 +44,7 @@ const Item = ({ id, name, price, quantity, description, image, dispatch,orderIte
           </IconButton>
         </Stack>
         <button className="AddCartButton">
-          <IconButton onClick={orderItems}> 
+          <IconButton onClick={()=>orderItems(id)}> 
             <ShoppingCartIcon fontSize="large"/>
           </IconButton>
         </button>
