@@ -5,12 +5,12 @@ import { Link as RouterLink } from "react-router-dom";
 import JoyLink from "@mui/joy/Link";
 import Item from "./Item";
 // import Items from "./Items";
-const ItemList = ({ state, categories, dispatch }) => {
+const ItemList = ({ state, categories, dispatch,orderItems }) => {
   const [value, setValue] = useState("All");
   const handleChange = (e, newValue) => {
     setValue(newValue);
   };
-  console.log(value);
+  
   return (
     <div className="ItemList">
       <TabContext value={value}>
@@ -40,13 +40,14 @@ const ItemList = ({ state, categories, dispatch }) => {
                   description={item.description}
                   image={item.image}
                   dispatch={dispatch}
+                  orderItems={orderItems}
                 />
               </Grid>
             ))}
           </Grid>
         </TabPanel>
 
-        <Grid container >
+        <Grid container>
           {state.items.map((item) => (
             <TabPanel value={item.category}>
               <Grid item>
@@ -59,6 +60,7 @@ const ItemList = ({ state, categories, dispatch }) => {
                   description={item.description}
                   image={item.image}
                   dispatch={dispatch}
+                  orderItems={orderItems}
                 />
               </Grid>
             </TabPanel>

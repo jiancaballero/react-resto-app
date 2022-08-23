@@ -2,24 +2,16 @@ import logo from "./logo.svg";
 import "./App.css";
 import Cart from "./components/Cart";
 import AddItem from "./components/AddItem";
-import { useReducer, useState } from "react";
+import { useReducer, useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import ItemList from "./components/ItemList";
 import { Route, Routes } from "react-router";
 import FilterMenu from "./components/FilterMenu";
 import CartNotif from "./components/CartNotif";
+import Admin from "./components/Admin";
+import SearchItem from "./components/SearchItem";
 function App() {
   const initialState = {
-    users:[
-      {
-        uID:uuidv4(),
-        role:admin,
-        username:"admin123",
-        password:"password123",
-        firstName:"Admin",
-        lastName:"Resto"
-      }
-    ],
     items: [
       {
         id: uuidv4(),
@@ -42,9 +34,21 @@ function App() {
           "https://static.toiimg.com/thumb/53096885.cms?width=1200&height=900",
       },
     ],
-    cartCount: 0,
+    cart: [
+      {
+        id: "",
+        name: "",
+        category: "",
+        quantity: 0,
+        price: 0,
+        description: "",
+        image: "",
+      },
+    ],
   };
-
+  // search
+  const [searchKey, setSearchKey] = useState("");
+  const [cartCount, setCartCount] = useState(0);
   //set up reducer
   const reducer = (state, action) => {
     switch (action.type) {
@@ -57,10 +61,6 @@ function App() {
           ...state,
           items: state.items.filter((item) => item.id !== action.payload),
         };
-      }
-
-      case "ORDER_ITEM": {
-        console.log(`Order Item: ${action.payload}`);
       }
 
       case "INCREASE_QUANTITY": {
@@ -93,14 +93,46 @@ function App() {
         };
       }
 
+      case "ORDER_ITEM":{
+        console.log("ORDERING")
+      }
+
+      // FIXME: not working searchfeature
+      // case "SEARCH_ITEM": {
+      //   const searchName = state.items.filter((item) => {
+      //     return Object.values(item.name)
+      //       .join("")
+      //       .toLowerCase()
+      //       .includes(action.payload.input.toLowerCase());
+      //   });
+      //   return { ...state, items: searchName };
+      // }
+
       default: {
         return state;
       }
     }
   };
 
-  // define reducer
+  // () => {
+  //   const localData = localStorage.getItem("initialState");
+  //   return localData ? JSON.parse(localData) : [];
+  // }
   const [state, dispatch] = useReducer(reducer, initialState);
+  const orderItems = () => {
+    dispatch({ type:"ORDER_ITEM"})
+    setCartCount(
+      state.items
+        .map((item) => item.quantity)
+        .reduce((prev, curr) => {
+          return prev + curr;
+        })
+    );
+  };
+
+  // useEffect(() => {
+  //   localStorage.setItem("initialState", JSON.stringify(state));
+  // }, [state.users]);
 
   const categories = state.items
     .map((item) => item.category)
@@ -113,22 +145,22 @@ function App() {
 
   return (
     <>
-      
-      <ItemList state={state} dispatch={dispatch} categories={categories} />
-      <CartNotif cartCount={state.cartCount} />
       <AddItem
         state={state}
         id={uuidv4()}
         dispatch={dispatch}
         categories={categories}
       />
-
-      {/* <Routes>
-        
-           
-          
-        
-      </Routes> */}
+      <ItemList
+        state={state}
+        dispatch={dispatch}
+        categories={categories}
+        orderItems={orderItems}
+      />
+      <CartNotif cartCount={cartCount} />
+      <SearchItem dispatch={dispatch} />
+      <Cart state={state} />
+      <Routes></Routes>
     </>
   );
 }
