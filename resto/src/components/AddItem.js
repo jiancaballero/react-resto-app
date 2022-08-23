@@ -22,7 +22,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 
 import Tooltip from "@mui/material/Tooltip";
 import AddIcon from "@mui/icons-material/Add";
-const AddItem = ({ state, dispatch, id,categories }) => {
+const AddItem = ({ state, dispatch, id, categories }) => {
   const [tags, setTags] = useState([]);
   const [open, setOpen] = React.useState(false);
   const [itemName, setItemName] = useState("");
@@ -31,11 +31,11 @@ const AddItem = ({ state, dispatch, id,categories }) => {
   const [inputCategory, setInputCategory] = useState("");
   const [isNew, setIsNew] = useState(true);
   const [item, setItem] = useState({
-    id: id,
+    id: "",
     name: "",
     category: "",
     price: 0,
-    quantity:0,
+    quantity: 0,
     description: "",
     image: "",
     isNew: true,
@@ -55,12 +55,10 @@ const AddItem = ({ state, dispatch, id,categories }) => {
   const handleClose = () => {
     setOpen(false);
     showNewCategoryInput(false);
-    
   };
   const handleNewCategoryInput = (e) => {
     setInputCategory(e.target.value);
     setItem({ ...item, category: inputCategory });
-   
   };
 
   const handleKeyPress = (e) => {
@@ -108,10 +106,15 @@ const AddItem = ({ state, dispatch, id,categories }) => {
     }
   };
 
+  // FIXME: make a state for the inputs and remove all inputs when submitted
+  const addNewItem = () => {
+    setItem({...item,id:id})
+    dispatch({ type: "ADD_ITEM", payload: item });
+  };
+
   //   TODO: DISPLAY ERROR MESSAGES
   return (
     <div>
-     
       <Tooltip placement="left" title="Add Item">
         <Fab
           sx={{ position: "absolute", bottom: 16, right: 16 }}
@@ -150,7 +153,7 @@ const AddItem = ({ state, dispatch, id,categories }) => {
                   <AddIcon fontSize="small" />
                   Add New Category
                 </MenuItem>
-                
+
                 {categories.map((category) => (
                   <MenuItem value={category}>{category}</MenuItem>
                 ))}
@@ -232,7 +235,6 @@ const AddItem = ({ state, dispatch, id,categories }) => {
               onKeyPress={handleKeyPress}
               name="tag"
               label="Tags (optional)"
-              
               fullWidth
               variant="outlined"
               margin="dense"
@@ -250,13 +252,7 @@ const AddItem = ({ state, dispatch, id,categories }) => {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button
-            onClick={() => {
-              dispatch({ type: "ADD_ITEM", payload: item });
-            }}
-          >
-            Submit
-          </Button>
+          <Button onClick={addNewItem}>Submit</Button>
         </DialogActions>
       </Dialog>
     </div>

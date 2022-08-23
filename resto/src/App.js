@@ -10,6 +10,7 @@ import FilterMenu from "./components/FilterMenu";
 import CartNotif from "./components/CartNotif";
 import Admin from "./components/Admin";
 import SearchItem from "./components/SearchItem";
+import CartList from "./components/CartList";
 function App() {
   const initialState = {
     items: [
@@ -49,12 +50,15 @@ function App() {
       }
 
       case "DELETE_ITEM": {
+        //  FIXME: Cart count does not update when item is removed
+
         return {
           ...state,
-          items: state.items.filter((item) => item.id !== action.payload),
+          items: state.items.filter((item) => item.id !== action.payload.id),
+          cart: state.cart.filter((item) => item.id !== action.payload.id),
         };
       }
-
+       
       case "INCREASE_QUANTITY": {
         return {
           items: [
@@ -85,80 +89,33 @@ function App() {
         };
       }
 
-      // FIXME: doesnt add all ordered items
+       
       case "ORDER_ITEM": {
         const orderedItem = action.payload.id;
-        let cartCopy = [];
         const itemObj = Object.assign(
           {},
           ...state.items.filter((item) => item.id === orderedItem)
         );
-
-        if (state.cart.length) {
-          state.cart.forEach((item, index) => {
-            if (item.id === itemObj.id) {
-              state.cart.splice(index, 1, itemObj);
-            } else {
-              if (state.cart.every((element) => element.id === item.id)) {
-                state.cart.push(itemObj);
+        if (itemObj.quantity > 0) {
+          if (state.cart.length) {
+            state.cart.forEach((item, index) => {
+              if (item.id === itemObj.id) {
+                state.cart.splice(index, 1, itemObj);
+              } else {
+                if (state.cart.every((element) => element.id !== itemObj.id)) {
+                  state.cart.push(itemObj);
+                }
               }
-            }
-          });
-        } else {
-          state.cart.push(itemObj);
+            });
+          } else {
+            state.cart.push(itemObj);
+          }
+        } else if (itemObj.quantity <= 0 && cartCount <= 0) {
+          alert("Please add a quantity");
         }
 
-        // if (cartCopy.length) {
-        //   cartCopy.forEach((copy, index) => {
-        //     if (copy.id === itemObj.id) {
-        //       console.log("same");
-        //       cartCopy.splice(index, 1, itemObj);
-        //     } else {
-        //       cartCopy.push(itemObj);
-        //     }
-        //   });
-        // } else {
-        //   setCartCopy(...cart,itemObj);
-        // }
-        // console.log(cartCopy);
-        // if (state.cart.length) {
-        //   state.cart.forEach((item, index) => {
-        //     if (item.id === itemObj.id) {
-        //       // update that in the cart
-        //       // state.cart.splice(index,1,itemObj);
-        //       console.log("same");
-        //     }
-        //     else{
-        //       cartCopy.push(itemObj)
-        //     }
-        //   });
-        // } else {
-        //   cartCopy.push(itemObj)
-        //   state.cart.push(itemObj);
-        // }
-
-        // state.cart.push(item)
-        // console.log(cartCopy);
+        return {...state}
       }
-
-      // FIXME: not working searchfeature
-      // case "SEARCH_ITEM": {
-      //   if (action.payload.input != "") {
-      //     const searchName = state.items.filter((item) => {
-      //       return Object.values(item.name)
-      //         .join("")
-      //         .toLowerCase()
-      //         .includes(action.payload.input.toLowerCase());
-      //     });
-      //     setSearchResult(searchName);
-      //     console.log(searchResult);
-      //     // return { ...state, items: searchName };
-      //   }
-      //   else{
-      //     setSearchResult(state)
-      //   }
-      // }
-
       default: {
         return state;
       }
@@ -166,7 +123,7 @@ function App() {
   };
 
   const [state, dispatch] = useReducer(reducer, initialState);
-  console.log(state);
+
   const orderItems = (id) => {
     dispatch({ type: "ORDER_ITEM", payload: { id: id } });
     setCartCount(
@@ -176,6 +133,15 @@ function App() {
           return prev + curr;
         })
     );
+  };
+  const deleteItem = (id) => {
+    console.log(state.items
+      .map((item) => item.quantity)
+      .reduce((prev, curr) => {
+        return prev + curr;
+      }))
+    // setCartCount();
+    dispatch({ type: "DELETE_ITEM", payload: { id: id } });
   };
 
   const categories = state.items
@@ -200,11 +166,11 @@ function App() {
         dispatch={dispatch}
         categories={categories}
         orderItems={orderItems}
+        deleteItem={deleteItem}
       />
       <CartNotif cartCount={cartCount} />
       <SearchItem dispatch={dispatch} />
-      <Cart state={state} />
-     
+      <CartList state={state} />
     </>
   );
 }

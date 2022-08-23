@@ -6,7 +6,8 @@ import { Paper, IconButton, Stack, Box, Button } from "@mui/material/";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-const Item = ({ id, name, price, quantity, description, image, dispatch,orderItems }) => {
+import DeleteIcon from "@mui/icons-material/Delete";
+const Item = ({ id, name, price, quantity, description, image, dispatch,orderItems,deleteItem }) => {
   return (
     <Paper elevation={8} sx={{ borderRadius: "15px 15px 0 0" }}>
       <div className="ItemCardImage">
@@ -43,6 +44,14 @@ const Item = ({ id, name, price, quantity, description, image, dispatch,orderIte
             <AddCircleIcon fontSize="large" />
           </IconButton>
         </Stack>
+        <IconButton
+            aria-label="delete item"
+            onClick={() => {
+              deleteItem(id)
+            }}
+          >
+            <DeleteIcon />
+          </IconButton>
         <button className="AddCartButton">
           <IconButton onClick={()=>orderItems(id)}> 
             <ShoppingCartIcon fontSize="large"/>

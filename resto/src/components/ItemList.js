@@ -5,7 +5,7 @@ import { Link as RouterLink } from "react-router-dom";
 import JoyLink from "@mui/joy/Link";
 import Item from "./Item";
 // import Items from "./Items";
-const ItemList = ({ state, categories, dispatch,orderItems }) => {
+const ItemList = ({ state, categories, dispatch,orderItems,deleteItem }) => {
   const [value, setValue] = useState("All");
   const handleChange = (e, newValue) => {
     setValue(newValue);
@@ -41,6 +41,7 @@ const ItemList = ({ state, categories, dispatch,orderItems }) => {
                   image={item.image}
                   dispatch={dispatch}
                   orderItems={orderItems}
+                  deleteItem={deleteItem}
                 />
               </Grid>
             ))}
