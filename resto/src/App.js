@@ -58,7 +58,7 @@ function App() {
           cart: state.cart.filter((item) => item.id !== action.payload.id),
         };
       }
-       
+
       case "INCREASE_QUANTITY": {
         return {
           items: [
@@ -88,8 +88,7 @@ function App() {
           cart: [...state.cart],
         };
       }
-
-       
+      // FIXME: quantity does not update when clicked with same number
       case "ORDER_ITEM": {
         const orderedItem = action.payload.id;
         const itemObj = Object.assign(
@@ -100,7 +99,9 @@ function App() {
           if (state.cart.length) {
             state.cart.forEach((item, index) => {
               if (item.id === itemObj.id) {
+                itemObj.quantity+=item.quantity;
                 state.cart.splice(index, 1, itemObj);
+                
               } else {
                 if (state.cart.every((element) => element.id !== itemObj.id)) {
                   state.cart.push(itemObj);
@@ -113,8 +114,7 @@ function App() {
         } else if (itemObj.quantity <= 0 && cartCount <= 0) {
           alert("Please add a quantity");
         }
-
-        return {...state}
+        return { ...state };
       }
       default: {
         return state;
@@ -124,23 +124,26 @@ function App() {
 
   const [state, dispatch] = useReducer(reducer, initialState);
 
+  // FIXME: cart count gets all quantity of items not the item ordered
+  // FIXME: quantity does not update when clicked with same number
   const orderItems = (id) => {
     dispatch({ type: "ORDER_ITEM", payload: { id: id } });
+    setCartCount(
+      state.cart
+        .map((item) => item.quantity)
+        .reduce((prev, curr) => {
+          return prev + curr;
+        }, cartCount)
+    );
+  };
+  const deleteItem = (id) => {
     setCartCount(
       state.items
         .map((item) => item.quantity)
         .reduce((prev, curr) => {
-          return prev + curr;
-        })
+          return prev - curr;
+        }, cartCount)
     );
-  };
-  const deleteItem = (id) => {
-    console.log(state.items
-      .map((item) => item.quantity)
-      .reduce((prev, curr) => {
-        return prev + curr;
-      }))
-    // setCartCount();
     dispatch({ type: "DELETE_ITEM", payload: { id: id } });
   };
 
