@@ -22,25 +22,53 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import EditIcon from "@mui/icons-material/Edit";
 import Tooltip from "@mui/material/Tooltip";
+import { QuestionAnswerOutlined } from "@mui/icons-material";
 
 const EditItem = ({
   id,
   name,
   price,
-  quantity,
   description,
   image,
   dispatch,
-  category
+  category,
 }) => {
   const [open, setOpen] = React.useState(false);
+
+  const [edit, setEdit] = useState({
+    id: id,
+    category: category,
+    name: name,
+    price: price,
+    description: description,
+    image: image,
+  });
   const handleClickOpen = () => {
     setOpen(true);
   };
   const handleClose = () => {
     setOpen(false);
   };
-  const handleInput = () => {};
+  const handleInput = (e) => {
+    const input = e.target.name;
+    switch (input) {
+      case "name":
+        setEdit({ ...edit, name: e.target.value });
+        break;
+      case "category":
+        setEdit({ ...edit, category: e.target.value });
+        break;
+      case "price":
+        setEdit({ ...edit, price: e.target.value });
+        break;
+      case "description":
+        setEdit({ ...edit, description: e.target.value });
+        break;
+      case "image":
+        setEdit({ ...edit, image: e.target.value });
+        break;
+    }
+  };
 
   return (
     <div>
@@ -62,9 +90,9 @@ const EditItem = ({
 
           <Box sx={{ marginBottom: "1em" }}>
             <TextField
-              value={category}
+              value={edit.category}
               onChange={handleInput}
-              name="editCategory"
+              name="category"
               autoFocus
               margin="dense"
               label="Edit Category"
@@ -76,7 +104,7 @@ const EditItem = ({
 
           <Box sx={{ marginBottom: "1em" }}>
             <TextField
-            value={name}
+              value={edit.name}
               name="name"
               autoFocus
               margin="dense"
@@ -90,7 +118,7 @@ const EditItem = ({
           <Box sx={{ marginBottom: "1em" }}>
             <TextField
               required
-              value={price}
+              value={edit.price}
               name="price"
               autoFocus
               margin="dense"
@@ -110,7 +138,7 @@ const EditItem = ({
           </Box>
           <Box sx={{ marginBottom: "1em" }}>
             <TextField
-            value={image}
+              value={edit.image}
               onChange={handleInput}
               name="image"
               autoFocus
@@ -123,7 +151,7 @@ const EditItem = ({
           </Box>
           <Box sx={{ marginBottom: "1em" }}>
             <TextField
-            value={description}
+              value={edit.description}
               onChange={handleInput}
               name="description"
               label="Description"
@@ -157,7 +185,19 @@ const EditItem = ({
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
           <Button
-            onClick={dispatch({ type: "EDIT_ITEM", payload: { id: id } })}
+            onClick={() => {
+              dispatch({
+                type: "EDIT_ITEM",
+                payload: {
+                  id: edit.id,
+                  name: edit.name,
+                  price: edit.price,
+                  category: edit.category,
+                  image: edit.image,
+                  description: edit.description,
+                },
+              });
+            }}
           >
             Submit
           </Button>

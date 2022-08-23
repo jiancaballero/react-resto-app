@@ -117,7 +117,26 @@ function App() {
       }
       case "EDIT_ITEM": {
         const itemID = action.payload.id;
-        console.log(itemID)
+        const itemName = action.payload.name;
+        const itemCategory = action.payload.category;
+        const itemImage= action.payload.image;
+        const itemDescription = action.payload.description;
+        const itemPrice = action.payload.price;
+        state.items.filter(item=>item.id===itemID).map(item=>{
+          item.name=itemName;
+          item.category=itemCategory;
+          item.price=itemPrice;
+          item.image=itemImage;
+          item.description=itemDescription;
+        })
+        state.cart.filter(item=>item.id===itemID).map(item=>{
+          item.name=itemName;
+          item.category=itemCategory;
+          item.price=itemPrice;
+          item.image=itemImage;
+          item.description=itemDescription;
+        })
+        return {...state}
       }
 
       default: {
