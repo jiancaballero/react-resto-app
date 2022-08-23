@@ -5,9 +5,22 @@ import ImageListItemBar from "@mui/material/ImageListItemBar";
 import { Paper, IconButton, Stack, Box, Button } from "@mui/material/";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import DeleteIcon from "@mui/icons-material/Delete";
-const Item = ({ id, name, price, quantity, description, image, dispatch,orderItems,deleteItem }) => {
+
+import EditItem from "./EditItem";
+const Item = ({
+  id,
+  name,
+  price,
+  quantity,
+  description,
+  image,
+  dispatch,
+  orderItems,
+  deleteItem,
+  category,
+}) => {
   return (
     <Paper elevation={8} sx={{ borderRadius: "15px 15px 0 0" }}>
       <div className="ItemCardImage">
@@ -43,18 +56,21 @@ const Item = ({ id, name, price, quantity, description, image, dispatch,orderIte
           >
             <AddCircleIcon fontSize="large" />
           </IconButton>
-        </Stack>
-        <IconButton
+          <EditItem dispatch={dispatch} id={id} name={name} price={price} category={category} description={description} image={image}/>
+          
+          <IconButton
             aria-label="delete item"
             onClick={() => {
-              deleteItem(id)
+              deleteItem(id);
             }}
           >
             <DeleteIcon />
           </IconButton>
+        </Stack>
+
         <button className="AddCartButton">
-          <IconButton onClick={()=>orderItems(id)}> 
-            <ShoppingCartIcon fontSize="large"/>
+          <IconButton onClick={() => orderItems(id)}>
+            <ShoppingCartIcon fontSize="large" />
           </IconButton>
         </button>
       </Stack>

@@ -99,9 +99,8 @@ function App() {
           if (state.cart.length) {
             state.cart.forEach((item, index) => {
               if (item.id === itemObj.id) {
-                itemObj.quantity+=item.quantity;
+                itemObj.quantity += item.quantity;
                 state.cart.splice(index, 1, itemObj);
-                
               } else {
                 if (state.cart.every((element) => element.id !== itemObj.id)) {
                   state.cart.push(itemObj);
@@ -111,11 +110,16 @@ function App() {
           } else {
             state.cart.push(itemObj);
           }
-        } else if (itemObj.quantity <= 0 && cartCount <= 0) {
+        } else {
           alert("Please add a quantity");
         }
         return { ...state };
       }
+      case "EDIT_ITEM": {
+        const itemID = action.payload.id;
+        console.log(itemID)
+      }
+
       default: {
         return state;
       }

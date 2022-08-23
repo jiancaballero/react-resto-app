@@ -39,6 +39,7 @@ const ItemList = ({ state, categories, dispatch,orderItems,deleteItem }) => {
                   quantity={item.quantity}
                   description={item.description}
                   image={item.image}
+                  category={item.category}
                   dispatch={dispatch}
                   orderItems={orderItems}
                   deleteItem={deleteItem}
