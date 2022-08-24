@@ -1,14 +1,16 @@
 import React from "react";
 import { Badge } from "@mui/material";
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-const CartNotif = ({cartCount}) => {
-  
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+const CartNotif = ({ cartCount }) => {
+  const [open, setOpen] = React.useState(false);
+  const handleDrawerOpen = () => {
+    setOpen(true);
+  };
+
   return (
-    <div>
-      <Badge badgeContent={cartCount} color="error" showZero>
-        <ShoppingCartIcon fontSize="large"/>
-      </Badge>
-    </div>
+    <Badge badgeContent={cartCount} color="error" showZero>
+      <ShoppingCartIcon fontSize="large" />
+    </Badge>
   );
 };
 

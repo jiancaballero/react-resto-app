@@ -106,7 +106,7 @@ const AddItem = ({ state, dispatch, id, categories }) => {
     }
   };
 
-  // FIXME: make a state for the inputs and remove all inputs when submitted
+  
   const addNewItem = () => {
     setItem({...item,id:id})
     dispatch({ type: "ADD_ITEM", payload: item });

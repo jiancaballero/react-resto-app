@@ -1,9 +1,11 @@
 import logo from "./logo.svg";
+import React from "react";
 import "./App.css";
 import Cart from "./components/Cart";
 import AddItem from "./components/AddItem";
 import { useReducer, useState, useEffect, startTransition } from "react";
 import { v4 as uuidv4 } from "uuid";
+import Box from "@mui/material/Box";
 import ItemList from "./components/ItemList";
 import { Route, Routes } from "react-router";
 import FilterMenu from "./components/FilterMenu";
@@ -11,6 +13,26 @@ import CartNotif from "./components/CartNotif";
 import Admin from "./components/Admin";
 import SearchItem from "./components/SearchItem";
 import CartList from "./components/CartList";
+import HeaderBar from "./components/HeaderBar";
+import Drawer from "@mui/material/Drawer";
+import MuiAppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import CssBaseline from "@mui/material/CssBaseline";
+import List from "@mui/material/List";
+import Typography from "@mui/material/Typography";
+import Divider from "@mui/material/Divider";
+import IconButton from "@mui/material/IconButton";
+import MenuIcon from "@mui/icons-material/Menu";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import ListItem from "@mui/material/ListItem";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import InboxIcon from "@mui/icons-material/MoveToInbox";
+import MailIcon from "@mui/icons-material/Mail";
+import { styled, useTheme } from "@mui/material/styles";
+
 function App() {
   const initialState = {
     items: [
@@ -36,12 +58,12 @@ function App() {
       },
     ],
     cart: [],
-    searchResult:[],
+    searchResult: [],
     total: 0,
     cartCount: 0,
-    searchKey:""
+    searchKey: "",
   };
- 
+
   // const [cartCount, setCartCount] = useState(0);
   //set up reducer
   const reducer = (state, action) => {
@@ -60,6 +82,7 @@ function App() {
 
       case "INCREASE_QUANTITY": {
         return {
+          ...state,
           items: [
             ...state.items.map((item) => {
               if (item.id === action.payload.id) {
@@ -68,14 +91,12 @@ function App() {
               return item;
             }),
           ],
-          cart: state.cart,
-          total: state.total,
-          cartCount: state.cartCount,
         };
       }
 
       case "DECREASE_QUANTITY": {
         return {
+          ...state,
           items: [
             ...state.items.map((item) => {
               if (item.id === action.payload.id) {
@@ -86,9 +107,6 @@ function App() {
               return item;
             }),
           ],
-          cart: state.cart,
-          total: state.total,
-          cartCount: state.cartCount,
         };
       }
 
@@ -148,6 +166,7 @@ function App() {
       case "DECREASE_CART_QUANTITY": {
         const itemID = action.payload.id;
         return {
+          ...state,
           items: state.items,
           cart: [
             ...state.cart.map((item) => {
@@ -159,13 +178,12 @@ function App() {
               return item;
             }),
           ],
-          total: state.total,
-          cartCount: state.cartCount,
         };
       }
       case "INCREASE_CART_QUANTITY": {
         const itemID = action.payload.id;
         return {
+          ...state,
           items: state.items,
           cart: [
             ...state.cart.map((item) => {
@@ -177,8 +195,6 @@ function App() {
               return item;
             }),
           ],
-          total: state.total,
-          cartCount: state.cartCount,
         };
       }
       case "DELETE_CART_ITEM": {
@@ -195,10 +211,9 @@ function App() {
           sum += item.quantity * item.price;
         });
         return {
-          items: state.items,
-          cart: state.cart,
+          ...state,
+
           total: sum,
-          countCart: state.cartCount,
         };
       }
       case "COUNT_CART": {
@@ -208,31 +223,32 @@ function App() {
         });
 
         return {
-          items: state.items,
-          cart: state.cart,
-          total: state.total,
-          cartCount: sum
+          ...state,
+
+          cartCount: sum,
         };
       }
-      case "RESET_QUANTITY":{
-
-        state.items.filter(item=>item.id===action.payload.id).map(item=>{
-          item.quantity =0;
-        })
-        return({...state})
+      case "RESET_QUANTITY": {
+        state.items
+          .filter((item) => item.id === action.payload.id)
+          .map((item) => {
+            item.quantity = 0;
+          });
+        return { ...state };
       }
       case "SEARCH_ITEM": {
-        state.searchKey = action.payload.input
+        state.searchKey = action.payload.input;
         const searchName = state.items.filter((item) => {
           return Object.values(item)
             .join("")
             .toLowerCase()
             .includes(state.searchKey.toLowerCase());
         });
-        
+
         return { ...state, searchResult: searchName };
       }
-
+      case "SORT_ITEM": {
+      }
 
       default: {
         return state;
@@ -241,13 +257,12 @@ function App() {
   };
 
   const [state, dispatch] = useReducer(reducer, initialState);
-  console.log(state.searchResult)
-  // FIXME: cart count gets all quantity of items not the item ordered
+
   const orderItems = (id) => {
     dispatch({ type: "ORDER_ITEM", payload: { id: id } });
     dispatch({ type: "TOTAL_AMOUNT" });
     dispatch({ type: "COUNT_CART" });
-    dispatch({ type: "RESET_QUANTITY",payload:{id:id} });
+    dispatch({ type: "RESET_QUANTITY", payload: { id: id } });
   };
   const deleteItem = (id) => {
     dispatch({ type: "DELETE_ITEM", payload: { id: id } });
@@ -265,9 +280,86 @@ function App() {
       return category;
     }, []);
 
+  // REACT UI STYLED COMPONENT DRAWER
+  const drawerWidth = 360;
+
+  const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
+    ({ theme, open }) => ({
+      flexGrow: 1,
+      padding: theme.spacing(3),
+      transition: theme.transitions.create("margin", {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen,
+      }),
+      marginRight: -drawerWidth,
+      ...(open && {
+        transition: theme.transitions.create("margin", {
+          easing: theme.transitions.easing.easeOut,
+          duration: theme.transitions.duration.enteringScreen,
+        }),
+        marginRight: 0,
+      }),
+    })
+  );
+
+  const AppBar = styled(MuiAppBar, {
+    shouldForwardProp: (prop) => prop !== "open",
+  })(({ theme, open }) => ({
+    transition: theme.transitions.create(["margin", "width"], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    ...(open && {
+      width: `calc(100% - ${drawerWidth}px)`,
+      transition: theme.transitions.create(["margin", "width"], {
+        easing: theme.transitions.easing.easeOut,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
+      marginRight: drawerWidth,
+    }),
+  }));
+
+  const DrawerHeader = styled("div")(({ theme }) => ({
+    display: "flex",
+    alignItems: "center",
+    padding: theme.spacing(0, 1),
+    // necessary for content to be below app bar
+    ...theme.mixins.toolbar,
+    justifyContent: "flex-start",
+  }));
+  const theme = useTheme();
+  const [open, setOpen] = React.useState(false);
+
+  const handleDrawerOpen = () => {
+    setOpen(true);
+  };
+
+  const handleDrawerClose = () => {
+    setOpen(false);
+  };
   return (
-    <>
-      <h1>Total:{state.total}</h1>
+    <Box sx={{ display: "flex" }}>
+      <CssBaseline />
+      <AppBar position="fixed" open={open}>
+        <Toolbar>
+          <Typography variant="h6" noWrap sx={{ flexGrow: 1 }} component="div">
+            Persistent drawer
+          </Typography>
+
+          <IconButton
+            aria-label="open drawer"
+            // edge="end"
+            onClick={handleDrawerOpen}
+            sx={{ ...(open && { display: "none" }) }}
+          >
+            <CartNotif cartCount={state.cartCount} />
+          </IconButton>
+        </Toolbar>
+      </AppBar>
+      <Main open={open}>
+        <DrawerHeader />
+        {/* INSERT CONTENT HERE */}
+        <h1>Total:{state.total}</h1>
       <AddItem
         state={state}
         id={uuidv4()}
@@ -281,10 +373,39 @@ function App() {
         orderItems={orderItems}
         deleteItem={deleteItem}
       />
-      <CartNotif cartCount={state.cartCount} />
+     
       <SearchItem dispatch={dispatch} />
       <CartList state={state} dispatch={dispatch} />
-    </>
+      </Main>
+      <Drawer
+        sx={{
+          width: drawerWidth,
+          flexShrink: 0,
+          "& .MuiDrawer-paper": {
+            width: drawerWidth,
+          },
+        }}
+        variant="persistent"
+        anchor="right"
+        open={open}
+      >
+        <DrawerHeader>
+          <IconButton onClick={handleDrawerClose}>
+            {theme.direction === "rtl" ? (
+              <ChevronLeftIcon />
+            ) : (
+              <ChevronRightIcon />
+            )}
+          </IconButton>
+        </DrawerHeader>
+        <Divider />
+
+        <Divider />
+      </Drawer>
+
+      
+      
+    </Box>
   );
 }
 

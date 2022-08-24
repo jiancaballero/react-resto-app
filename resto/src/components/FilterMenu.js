@@ -5,7 +5,8 @@ import { Link as RouterLink } from "react-router-dom";
 
 import JoyLink from "@mui/joy/Link";
 // import Items from "./Items";
-const FilterMenu = ({ categories, dispatch }) => {
+// FIXME: search result not working when filtered by category
+const FilterMenu = ({categories, dispatch }) => {
   const [value, setValue] = useState("All");
   const handleChange = (e, newValue) => {
     setValue(newValue);

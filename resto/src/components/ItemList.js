@@ -10,7 +10,7 @@ const ItemList = ({ state, categories, dispatch, orderItems, deleteItem }) => {
   const handleChange = (e, newValue) => {
     setValue(newValue);
   };
-  
+  console.log(state);
   return (
     <div className="ItemList">
       <TabContext value={value}>
@@ -29,8 +29,9 @@ const ItemList = ({ state, categories, dispatch, orderItems, deleteItem }) => {
         </Box>
         <TabPanel value="All">
           <Grid container spacing={2}>
-            {state.searchKey === ""
-              ? state.items.map((item) => (
+            {state.searchKey === "" ? (
+              state.items.length > 0 ? (
+                state.items.map((item) => (
                   <Grid item>
                     <Item
                       state={state}
@@ -47,23 +48,33 @@ const ItemList = ({ state, categories, dispatch, orderItems, deleteItem }) => {
                     />
                   </Grid>
                 ))
-              : state.searchResult.map((item) => (
-                  <Grid item>
-                    <Item
-                      state={state}
-                      id={item.id}
-                      name={item.name}
-                      price={item.price}
-                      quantity={item.quantity}
-                      description={item.description}
-                      image={item.image}
-                      category={item.category}
-                      dispatch={dispatch}
-                      orderItems={orderItems}
-                      deleteItem={deleteItem}
-                    />
-                  </Grid>
-                ))}
+              ) : (
+                <h1>No Items </h1>
+              )
+            ) : state.searchResult.length ? (
+              state.searchResult.map((item) => (
+                <Grid item>
+                  <Item
+                    state={state}
+                    id={item.id}
+                    name={item.name}
+                    price={item.price}
+                    quantity={item.quantity}
+                    description={item.description}
+                    image={item.image}
+                    category={item.category}
+                    dispatch={dispatch}
+                    orderItems={orderItems}
+                    deleteItem={deleteItem}
+                  />
+                </Grid>
+              ))
+            ) : (
+              <>
+                <h1>No Result Found. </h1>
+                <h2>Please type a name or category</h2>
+              </>
+            )}
           </Grid>
         </TabPanel>
 
