@@ -36,12 +36,14 @@ function App() {
       },
     ],
     cart: [],
+    total:0,
+    cartCount:0
+    
   };
   // search
   const [searchKey, setSearchKey] = useState("");
   const [searchResult, setSearchResult] = useState([]);
-  const [cartCount, setCartCount] = useState(0);
-  // const[cart,setCart] = useState([{}])
+  // const [cartCount, setCartCount] = useState(0);
   //set up reducer
   const reducer = (state, action) => {
     switch (action.type) {
@@ -88,7 +90,7 @@ function App() {
           cart: [...state.cart],
         };
       }
-      // FIXME: quantity does not update when clicked with same number
+      
       case "ORDER_ITEM": {
         const orderedItem = action.payload.id;
         const itemObj = Object.assign(
@@ -138,6 +140,42 @@ function App() {
         })
         return {...state}
       }
+      case "DECREASE_CART_QUANTITY":{
+        const itemID = action.payload.id;
+        return {
+          items:state.items,
+          cart: [
+            ...state.cart.map((item) => {
+              if (item.id === itemID) {
+                if (item.quantity > 0) {
+                  item.quantity -= 1;
+                }
+              }
+              return item;
+            }),
+          ],
+          
+        };
+
+      }
+      case "INCREASE_CART_QUANTITY":{
+        const itemID = action.payload.id;
+        return {
+          items:state.items,
+          cart: [
+            ...state.cart.map((item) => {
+              if (item.id === itemID) {
+                if (item.quantity > 0) {
+                  item.quantity += 1;
+                }
+              }
+              return item;
+            }),
+          ],
+          
+        };
+      }
+    
 
       default: {
         return state;
@@ -148,28 +186,28 @@ function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   // FIXME: cart count gets all quantity of items not the item ordered
-  // FIXME: quantity does not update when clicked with same number
   const orderItems = (id) => {
     dispatch({ type: "ORDER_ITEM", payload: { id: id } });
-    setCartCount(
-      state.cart
-        .map((item) => item.quantity)
-        .reduce((prev, curr) => {
-          return prev + curr;
-        }, cartCount)
-    );
+    // setCartCount(
+    //   state.cart
+    //     .map((item) => item.quantity)
+    //     .reduce((prev, curr) => {
+    //       return prev + curr;
+    //     }, cartCount)
+    // );
   };
   const deleteItem = (id) => {
-    setCartCount(
-      state.items
-        .map((item) => item.quantity)
-        .reduce((prev, curr) => {
-          return prev - curr;
-        }, cartCount)
-    );
+    // setCartCount(
+    //   state.items
+    //     .map((item) => item.quantity)
+    //     .reduce((prev, curr) => {
+    //       return prev - curr;
+    //     }, cartCount)
+    // );
     dispatch({ type: "DELETE_ITEM", payload: { id: id } });
   };
 
+  //TODO: PAEXPLAIN KAY MS KAYE LOGIC
   const categories = state.items
     .map((item) => item.category)
     .reduce((category, item) => {
@@ -194,9 +232,9 @@ function App() {
         orderItems={orderItems}
         deleteItem={deleteItem}
       />
-      <CartNotif cartCount={cartCount} />
-      <SearchItem dispatch={dispatch} />
-      <CartList state={state} />
+      <CartNotif state={state} />
+      <SearchItem dispatch={dispatch} cartCount={state.cartCount} />
+      <CartList  state={state} dispatch={dispatch}/>
     </>
   );
 }
