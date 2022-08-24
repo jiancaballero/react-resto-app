@@ -5,15 +5,14 @@ import Cart from "./components/Cart";
 import AddItem from "./components/AddItem";
 import { useReducer, useState, useEffect, startTransition } from "react";
 import { v4 as uuidv4 } from "uuid";
+import { Stack, Paper } from "@mui/material";
 import Box from "@mui/material/Box";
 import ItemList from "./components/ItemList";
 import { Route, Routes } from "react-router";
-import FilterMenu from "./components/FilterMenu";
 import CartNotif from "./components/CartNotif";
-import Admin from "./components/Admin";
+import EmptyCart from "./components/EmptyCart";
 import SearchItem from "./components/SearchItem";
 import CartList from "./components/CartList";
-import HeaderBar from "./components/HeaderBar";
 import Drawer from "@mui/material/Drawer";
 import MuiAppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
@@ -25,12 +24,7 @@ import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
+
 import { styled, useTheme } from "@mui/material/styles";
 
 function App() {
@@ -163,17 +157,36 @@ function App() {
           });
         return { ...state };
       }
+      // FIXME:DOES NOT REMOVE ITEM FROM ARRAY WHEN IT HAS NO QUANTIY
       case "DECREASE_CART_QUANTITY": {
         const itemID = action.payload.id;
+        // let newCart = state.cart.map((item, index) => {
+        //   if (item.id === itemID) {
+        //     if (item.quantity > 0) {
+        //       item.quantity -= 1;
+
+        //     }
+        //     if (item.quantity <= 0) {
+        //       debugger
+        //       return state.cart.splice(index, 1);
+        //     }
+        //   }
+        //   return item;
+        // });
+
         return {
           ...state,
           items: state.items,
           cart: [
-            ...state.cart.map((item) => {
+            ...state.cart.map((item, index) => {
               if (item.id === itemID) {
                 if (item.quantity > 0) {
                   item.quantity -= 1;
                 }
+                // if (item.quantity <= 0) {
+                //   debugger
+                //   return state.cart.splice(index, 1);
+                // }
               }
               return item;
             }),
@@ -207,6 +220,7 @@ function App() {
       }
       case "TOTAL_AMOUNT": {
         let sum = 0;
+
         state.cart.forEach((item) => {
           sum += item.quantity * item.price;
         });
@@ -238,6 +252,7 @@ function App() {
       }
       case "SEARCH_ITEM": {
         state.searchKey = action.payload.input;
+
         const searchName = state.items.filter((item) => {
           return Object.values(item)
             .join("")
@@ -258,18 +273,6 @@ function App() {
 
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const orderItems = (id) => {
-    dispatch({ type: "ORDER_ITEM", payload: { id: id } });
-    dispatch({ type: "TOTAL_AMOUNT" });
-    dispatch({ type: "COUNT_CART" });
-    dispatch({ type: "RESET_QUANTITY", payload: { id: id } });
-  };
-  const deleteItem = (id) => {
-    dispatch({ type: "DELETE_ITEM", payload: { id: id } });
-    dispatch({ type: "TOTAL_AMOUNT" });
-    dispatch({ type: "COUNT_CART" });
-  };
-
   //TODO: PAEXPLAIN KAY MS KAYE LOGIC
   const categories = state.items
     .map((item) => item.category)
@@ -281,7 +284,7 @@ function App() {
     }, []);
 
   // REACT UI STYLED COMPONENT DRAWER
-  const drawerWidth = 360;
+  const drawerWidth = 380;
 
   const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
     ({ theme, open }) => ({
@@ -321,6 +324,7 @@ function App() {
 
   const DrawerHeader = styled("div")(({ theme }) => ({
     display: "flex",
+    
     alignItems: "center",
     padding: theme.spacing(0, 1),
     // necessary for content to be below app bar
@@ -340,12 +344,12 @@ function App() {
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
+      {/* HEADER */}
       <AppBar position="fixed" open={open}>
         <Toolbar>
           <Typography variant="h6" noWrap sx={{ flexGrow: 1 }} component="div">
-            Persistent drawer
+            Resto App
           </Typography>
-
           <IconButton
             aria-label="open drawer"
             // edge="end"
@@ -356,33 +360,52 @@ function App() {
           </IconButton>
         </Toolbar>
       </AppBar>
+      {/* MAIN CONTENT */}
       <Main open={open}>
         <DrawerHeader />
         {/* INSERT CONTENT HERE */}
-        <h1>Total:{state.total}</h1>
-      <AddItem
-        state={state}
-        id={uuidv4()}
-        dispatch={dispatch}
-        categories={categories}
-      />
-      <ItemList
-        state={state}
-        dispatch={dispatch}
-        categories={categories}
-        orderItems={orderItems}
-        deleteItem={deleteItem}
-      />
-     
-      <SearchItem dispatch={dispatch} />
-      <CartList state={state} dispatch={dispatch} />
+        <SearchItem dispatch={dispatch} />
+        
+        <AddItem
+          state={state}
+          id={uuidv4()}
+          dispatch={dispatch}
+          categories={categories}
+        />
+
+        <Routes>
+          <Route
+            path=":category"
+            element={
+              <ItemList
+                state={state}
+                dispatch={dispatch}
+                categories={categories}
+              />
+            }
+          />
+          <Route
+            path="/"
+            element={
+              <ItemList
+                state={state}
+                dispatch={dispatch}
+                categories={categories}
+              />
+            }
+          />
+        </Routes>
       </Main>
+
+      {/* SIDEBAR */}
       <Drawer
         sx={{
           width: drawerWidth,
+
           flexShrink: 0,
           "& .MuiDrawer-paper": {
             width: drawerWidth,
+            padding: "1.25em",
           },
         }}
         variant="persistent"
@@ -390,7 +413,9 @@ function App() {
         open={open}
       >
         <DrawerHeader>
-          <IconButton onClick={handleDrawerClose}>
+          
+          <h1>Cart ({state.cartCount})</h1>
+          <IconButton onClick={handleDrawerClose} sx={{marginLeft:"auto"}}>
             {theme.direction === "rtl" ? (
               <ChevronLeftIcon />
             ) : (
@@ -398,13 +423,32 @@ function App() {
             )}
           </IconButton>
         </DrawerHeader>
+        
         <Divider />
-
-        <Divider />
+        {state.cart.length > 0 && (
+          <>
+            <Paper elevation={1} sx={{ padding: "1em", marginBottom:"2em" }}>
+              <CartList state={state} dispatch={dispatch} />
+            </Paper>
+            <Divider />
+            <Paper elevation={0} sx={{ padding: "1em", marginBottom:"2em"  }}>
+              <Stack direction="row" spacing={4}>
+                <h3>PROMO CODE:</h3>
+                <button>Add Coupon</button>
+              </Stack>
+            </Paper>
+            <Divider />
+            <Paper elevation={0}  sx={{ padding: "1em", marginTop:"auto"}}>
+              <h1>Total Amount:{state.total}</h1>
+            </Paper>
+          </>
+        )}
+        {!state.cart.length > 0 && (
+          <>
+            <EmptyCart />
+          </>
+        )}
       </Drawer>
-
-      
-      
     </Box>
   );
 }

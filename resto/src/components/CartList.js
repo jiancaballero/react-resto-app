@@ -1,13 +1,12 @@
-import { Card } from "@mui/material";
+import { Box } from "@mui/material";
 import React from "react";
 import Cart from "./Cart";
 
+
 const CartList = ({ state, dispatch }) => {
   return (
-    <div>
-      <h1>My Cart</h1>
-
-      {state.cart.length>0?state.cart.map((cart) => {
+    <Box sx={{height:"400px", overflow:"auto"}} >
+      {state.cart.map((cart) => {
         if (cart.quantity > 0) {
           return (
             <Cart
@@ -20,8 +19,8 @@ const CartList = ({ state, dispatch }) => {
             />
           );
         }
-      }):<h1>Your cart is empty</h1>}
-    </div>
+      })}
+    </Box>
   );
 };
 

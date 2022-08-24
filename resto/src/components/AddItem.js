@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
+import Divider from "@mui/material/Divider";
 import {
   Fab,
   MenuItem,
@@ -23,6 +24,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Tooltip from "@mui/material/Tooltip";
 import AddIcon from "@mui/icons-material/Add";
 const AddItem = ({ state, dispatch, id, categories }) => {
+  
   const [tags, setTags] = useState([]);
   const [open, setOpen] = React.useState(false);
   const [itemName, setItemName] = useState("");
@@ -31,7 +33,7 @@ const AddItem = ({ state, dispatch, id, categories }) => {
   const [inputCategory, setInputCategory] = useState("");
   const [isNew, setIsNew] = useState(true);
   const [item, setItem] = useState({
-    id: "",
+    id: id,
     name: "",
     category: "",
     price: 0,
@@ -108,7 +110,9 @@ const AddItem = ({ state, dispatch, id, categories }) => {
 
   
   const addNewItem = () => {
-    setItem({...item,id:id})
+  
+    // setItem({...item,id:itemID})
+    console.log(item)
     dispatch({ type: "ADD_ITEM", payload: item });
   };
 
@@ -125,11 +129,13 @@ const AddItem = ({ state, dispatch, id, categories }) => {
       </Tooltip>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Add an item</DialogTitle>
+        <Divider/>
         <DialogContent>
           <DialogContentText gutterBottom>
             Please fill out all forms. Make sure the item name has no
             duplicates.
           </DialogContentText>
+         
           {/* CHECKBOX */}
           <Box sx={{ margin: "1em 0" }}>
             <FormControlLabel

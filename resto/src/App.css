@@ -16,6 +16,7 @@
 .ItemCardBody {
   display:flex;
   justify-content:space-between;
+ 
 }
 .AddCartButton{
   border:none;

@@ -7,7 +7,6 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import DeleteIcon from "@mui/icons-material/Delete";
-
 import EditItem from "./EditItem";
 const Item = ({
   id,
@@ -21,8 +20,9 @@ const Item = ({
   deleteItem,
   category,
 }) => {
+  // FIXME: does not stay on page  when item is on filtered
   return (
-    <Paper elevation={8} sx={{ borderRadius: "15px 15px 0 0" }}>
+    <Paper elevation={8} sx={{ borderRadius: "15px" ,position:"relative"}}>
       <div className="ItemCardImage">
         <img src={image} />
       </div>
@@ -33,43 +33,66 @@ const Item = ({
         </h5>
       </div>
       <p>{description}</p>
+      <Box sx={{position:"absolute",top:"0",right:"0"}}>
+        <EditItem
+          dispatch={dispatch}
+          id={id}
+          name={name}
+          price={price}
+          category={category}
+          description={description}
+          image={image}
+        />
+        <IconButton
+          aria-label="delete item"
+          onClick={(e) => {
+            {
+              dispatch({ type: "DELETE_ITEM", payload: { id: id } });
+              dispatch({ type: "TOTAL_AMOUNT" });
+              dispatch({ type: "COUNT_CART" });
+              e.preventDefault();
+            }
+          }}
+        >
+          <DeleteIcon />
+        </IconButton>
+      </Box>
       <Stack direction="row" justifyContent="space-between">
-        <Stack direction="row" component="div">
-          {quantity > 0 && (
+        <Box>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            {quantity > 0 && (
+              <IconButton
+                aria-label="send"
+                size="large"
+                onClick={() => {
+                  dispatch({ type: "DECREASE_QUANTITY", payload: { id: id } });
+                }}
+              >
+                <RemoveCircleOutlineIcon fontSize="large" />
+              </IconButton>
+            )}
+            <h2>{quantity}</h2>
             <IconButton
               aria-label="send"
               size="large"
               onClick={() => {
-                dispatch({ type: "DECREASE_QUANTITY", payload: { id: id } });
+                dispatch({ type: "INCREASE_QUANTITY", payload: { id: id } });
               }}
             >
-              <RemoveCircleOutlineIcon fontSize="large" />
+              <AddCircleIcon fontSize="large" />
             </IconButton>
-          )}
-          <h3>{quantity}</h3>
-          <IconButton
-            aria-label="send"
-            size="large"
-            onClick={() => {
-              dispatch({ type: "INCREASE_QUANTITY", payload: { id: id } });
-            }}
-          >
-            <AddCircleIcon fontSize="large" />
-          </IconButton>
-          <EditItem dispatch={dispatch} id={id} name={name} price={price} category={category} description={description} image={image}/>
-          
-          <IconButton
-            aria-label="delete item"
-            onClick={() => {
-              deleteItem(id);
-            }}
-          >
-            <DeleteIcon />
-          </IconButton>
-        </Stack>
+          </Box>
+        </Box>
 
         <button className="AddCartButton">
-          <IconButton onClick={() => orderItems(id)}>
+          <IconButton
+            onClick={(e) => {
+              dispatch({ type: "ORDER_ITEM", payload: { id: id } });
+              dispatch({ type: "TOTAL_AMOUNT" });
+              dispatch({ type: "COUNT_CART" });
+              dispatch({ type: "RESET_QUANTITY", payload: { id: id } });
+            }}
+          >
             <ShoppingCartIcon fontSize="large" />
           </IconButton>
         </button>
