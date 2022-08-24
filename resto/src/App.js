@@ -36,9 +36,8 @@ function App() {
       },
     ],
     cart: [],
-    total:0,
-    cartCount:0
-    
+    total: 0,
+    cartCount: 0,
   };
   // search
   const [searchKey, setSearchKey] = useState("");
@@ -71,7 +70,9 @@ function App() {
               return item;
             }),
           ],
-          cart: [...state.cart],
+          cart: state.cart,
+          total: state.total,
+          cartCount: state.cartCount,
         };
       }
 
@@ -87,10 +88,12 @@ function App() {
               return item;
             }),
           ],
-          cart: [...state.cart],
+          cart: state.cart,
+          total: state.total,
+          cartCount: state.cartCount,
         };
       }
-      
+
       case "ORDER_ITEM": {
         const orderedItem = action.payload.id;
         const itemObj = Object.assign(
@@ -121,29 +124,33 @@ function App() {
         const itemID = action.payload.id;
         const itemName = action.payload.name;
         const itemCategory = action.payload.category;
-        const itemImage= action.payload.image;
+        const itemImage = action.payload.image;
         const itemDescription = action.payload.description;
         const itemPrice = action.payload.price;
-        state.items.filter(item=>item.id===itemID).map(item=>{
-          item.name=itemName;
-          item.category=itemCategory;
-          item.price=itemPrice;
-          item.image=itemImage;
-          item.description=itemDescription;
-        })
-        state.cart.filter(item=>item.id===itemID).map(item=>{
-          item.name=itemName;
-          item.category=itemCategory;
-          item.price=itemPrice;
-          item.image=itemImage;
-          item.description=itemDescription;
-        })
-        return {...state}
+        state.items
+          .filter((item) => item.id === itemID)
+          .map((item) => {
+            item.name = itemName;
+            item.category = itemCategory;
+            item.price = itemPrice;
+            item.image = itemImage;
+            item.description = itemDescription;
+          });
+        state.cart
+          .filter((item) => item.id === itemID)
+          .map((item) => {
+            item.name = itemName;
+            item.category = itemCategory;
+            item.price = itemPrice;
+            item.image = itemImage;
+            item.description = itemDescription;
+          });
+        return { ...state };
       }
-      case "DECREASE_CART_QUANTITY":{
+      case "DECREASE_CART_QUANTITY": {
         const itemID = action.payload.id;
         return {
-          items:state.items,
+          items: state.items,
           cart: [
             ...state.cart.map((item) => {
               if (item.id === itemID) {
@@ -154,14 +161,14 @@ function App() {
               return item;
             }),
           ],
-          
+          total: state.total,
+          cartCount: state.cartCount,
         };
-
       }
-      case "INCREASE_CART_QUANTITY":{
+      case "INCREASE_CART_QUANTITY": {
         const itemID = action.payload.id;
         return {
-          items:state.items,
+          items: state.items,
           cart: [
             ...state.cart.map((item) => {
               if (item.id === itemID) {
@@ -172,10 +179,43 @@ function App() {
               return item;
             }),
           ],
-          
+          total: state.total,
+          cartCount: state.cartCount,
         };
       }
-    
+      case "DELETE_CART_ITEM": {
+        const itemID = action.payload.id;
+        return {
+          ...state,
+          items: state.items,
+          cart: state.cart.filter((item) => item.id !== action.payload.id),
+        };
+      }
+      case "TOTAL_AMOUNT": {
+        let sum = 0;
+        state.cart.forEach((item) => {
+          sum += item.quantity * item.price;
+        });
+        return {
+          items: state.items,
+          cart: state.cart,
+          total: sum,
+          countCart: state.cartCount,
+        };
+      }
+      case "COUNT_CART": {
+        let sum = 0;
+        state.cart.forEach((item) => {
+          sum += item.quantity;
+        });
+
+        return {
+          items: state.items,
+          cart: state.cart,
+          total: state.total,
+          cartCount: sum
+        };
+      }
 
       default: {
         return state;
@@ -188,23 +228,13 @@ function App() {
   // FIXME: cart count gets all quantity of items not the item ordered
   const orderItems = (id) => {
     dispatch({ type: "ORDER_ITEM", payload: { id: id } });
-    // setCartCount(
-    //   state.cart
-    //     .map((item) => item.quantity)
-    //     .reduce((prev, curr) => {
-    //       return prev + curr;
-    //     }, cartCount)
-    // );
+    dispatch({ type: "TOTAL_AMOUNT" });
+    dispatch({ type: "COUNT_CART" });
   };
   const deleteItem = (id) => {
-    // setCartCount(
-    //   state.items
-    //     .map((item) => item.quantity)
-    //     .reduce((prev, curr) => {
-    //       return prev - curr;
-    //     }, cartCount)
-    // );
     dispatch({ type: "DELETE_ITEM", payload: { id: id } });
+    dispatch({ type: "TOTAL_AMOUNT" });
+    dispatch({ type: "COUNT_CART" });
   };
 
   //TODO: PAEXPLAIN KAY MS KAYE LOGIC
@@ -219,6 +249,7 @@ function App() {
 
   return (
     <>
+      <h1>Total:{state.total}</h1>
       <AddItem
         state={state}
         id={uuidv4()}
@@ -232,9 +263,9 @@ function App() {
         orderItems={orderItems}
         deleteItem={deleteItem}
       />
-      <CartNotif state={state} />
-      <SearchItem dispatch={dispatch} cartCount={state.cartCount} />
-      <CartList  state={state} dispatch={dispatch}/>
+      <CartNotif cartCount={state.cartCount} />
+      <SearchItem dispatch={dispatch} />
+      <CartList state={state} dispatch={dispatch} />
     </>
   );
 }

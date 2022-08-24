@@ -197,6 +197,9 @@ const EditItem = ({
                   description: edit.description,
                 },
               });
+              dispatch({ type: "TOTAL_AMOUNT"});
+              dispatch({ type: "COUNT_CART"});
+              
             }}
           >
             Submit

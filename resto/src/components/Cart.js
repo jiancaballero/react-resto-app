@@ -32,6 +32,8 @@ const Cart = ({ id, name, price, quantity, image, dispatch }) => {
         size="large"
         onClick={() => {
           dispatch({ type: "DECREASE_CART_QUANTITY", payload: { id: id } });
+          dispatch({ type: "TOTAL_AMOUNT"});
+          dispatch({ type: "COUNT_CART" });
         }}
       >
         <RemoveCircleOutlineIcon fontSize="large" />
@@ -41,6 +43,8 @@ const Cart = ({ id, name, price, quantity, image, dispatch }) => {
         size="large"
         onClick={() => {
           dispatch({ type: "INCREASE_CART_QUANTITY", payload: { id: id } });
+          dispatch({ type: "TOTAL_AMOUNT"});
+          dispatch({ type: "COUNT_CART" });
         }}
       >
         <AddCircleIcon fontSize="large" />
@@ -49,10 +53,13 @@ const Cart = ({ id, name, price, quantity, image, dispatch }) => {
             aria-label="delete item"
             onClick={() => {
               dispatch({ type: "DELETE_CART_ITEM", payload: { id: id } });
+              dispatch({ type: "TOTAL_AMOUNT"});
+              dispatch({ type: "COUNT_CART"});
             }}
           >
             <DeleteIcon />
           </IconButton>
+
     </Paper>
   );
 };

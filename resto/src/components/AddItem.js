@@ -252,7 +252,10 @@ const AddItem = ({ state, dispatch, id, categories }) => {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={addNewItem}>Submit</Button>
+          <Button onClick={()=>{
+            addNewItem();
+            handleClose();
+          }}>Submit</Button>
         </DialogActions>
       </Dialog>
     </div>
