@@ -5,7 +5,7 @@ import { Link as RouterLink } from "react-router-dom";
 import JoyLink from "@mui/joy/Link";
 import Item from "./Item";
 // import Items from "./Items";
-const ItemList = ({ state, categories, dispatch,orderItems,deleteItem }) => {
+const ItemList = ({ state, categories, dispatch, orderItems, deleteItem }) => {
   const [value, setValue] = useState("All");
   const handleChange = (e, newValue) => {
     setValue(newValue);
@@ -29,23 +29,41 @@ const ItemList = ({ state, categories, dispatch,orderItems,deleteItem }) => {
         </Box>
         <TabPanel value="All">
           <Grid container spacing={2}>
-            {state.items.map((item) => (
-              <Grid item>
-                <Item
-                  state={state}
-                  id={item.id}
-                  name={item.name}
-                  price={item.price}
-                  quantity={item.quantity}
-                  description={item.description}
-                  image={item.image}
-                  category={item.category}
-                  dispatch={dispatch}
-                  orderItems={orderItems}
-                  deleteItem={deleteItem}
-                />
-              </Grid>
-            ))}
+            {state.searchKey === ""
+              ? state.items.map((item) => (
+                  <Grid item>
+                    <Item
+                      state={state}
+                      id={item.id}
+                      name={item.name}
+                      price={item.price}
+                      quantity={item.quantity}
+                      description={item.description}
+                      image={item.image}
+                      category={item.category}
+                      dispatch={dispatch}
+                      orderItems={orderItems}
+                      deleteItem={deleteItem}
+                    />
+                  </Grid>
+                ))
+              : state.searchResult.map((item) => (
+                  <Grid item>
+                    <Item
+                      state={state}
+                      id={item.id}
+                      name={item.name}
+                      price={item.price}
+                      quantity={item.quantity}
+                      description={item.description}
+                      image={item.image}
+                      category={item.category}
+                      dispatch={dispatch}
+                      orderItems={orderItems}
+                      deleteItem={deleteItem}
+                    />
+                  </Grid>
+                ))}
           </Grid>
         </TabPanel>
 

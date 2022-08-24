@@ -186,6 +186,7 @@ const EditItem = ({
           <Button onClick={handleClose}>Cancel</Button>
           <Button
             onClick={() => {
+              handleClose();
               dispatch({
                 type: "EDIT_ITEM",
                 payload: {

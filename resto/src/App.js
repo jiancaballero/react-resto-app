@@ -36,12 +36,12 @@ function App() {
       },
     ],
     cart: [],
+    searchResult:[],
     total: 0,
     cartCount: 0,
+    searchKey:""
   };
-  // search
-  const [searchKey, setSearchKey] = useState("");
-  const [searchResult, setSearchResult] = useState([]);
+ 
   // const [cartCount, setCartCount] = useState(0);
   //set up reducer
   const reducer = (state, action) => {
@@ -51,8 +51,6 @@ function App() {
       }
 
       case "DELETE_ITEM": {
-        //  FIXME: Cart count does not update when item is removed
-
         return {
           ...state,
           items: state.items.filter((item) => item.id !== action.payload.id),
@@ -216,6 +214,25 @@ function App() {
           cartCount: sum
         };
       }
+      case "RESET_QUANTITY":{
+
+        state.items.filter(item=>item.id===action.payload.id).map(item=>{
+          item.quantity =0;
+        })
+        return({...state})
+      }
+      case "SEARCH_ITEM": {
+        state.searchKey = action.payload.input
+        const searchName = state.items.filter((item) => {
+          return Object.values(item)
+            .join("")
+            .toLowerCase()
+            .includes(state.searchKey.toLowerCase());
+        });
+        
+        return { ...state, searchResult: searchName };
+      }
+
 
       default: {
         return state;
@@ -224,12 +241,13 @@ function App() {
   };
 
   const [state, dispatch] = useReducer(reducer, initialState);
-
+  console.log(state.searchResult)
   // FIXME: cart count gets all quantity of items not the item ordered
   const orderItems = (id) => {
     dispatch({ type: "ORDER_ITEM", payload: { id: id } });
     dispatch({ type: "TOTAL_AMOUNT" });
     dispatch({ type: "COUNT_CART" });
+    dispatch({ type: "RESET_QUANTITY",payload:{id:id} });
   };
   const deleteItem = (id) => {
     dispatch({ type: "DELETE_ITEM", payload: { id: id } });
