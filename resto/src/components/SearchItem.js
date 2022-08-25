@@ -35,7 +35,7 @@ const SearchItem = ({ dispatch,searchKey }) => {
       type="search"
       name="search"
       ariaLabel="Search Item"
-      autoFocus
+      autoFocus={searchKey!==""}
       margin="dense"
       label="Search an item"
      value={searchKey}

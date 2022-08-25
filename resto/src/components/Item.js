@@ -33,7 +33,7 @@ const Item = ({
   deleteItem,
   category,
 }) => {
-  // FIXME: does not stay on page  when item is on filtered
+ 
   return (
     <Card sx={{ position: "relative", flexWrap: "wrap" }} elevation={0}>
       <Box sx={{ position: "absolute", top: "0", right: "0" }}>

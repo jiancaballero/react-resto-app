@@ -7,13 +7,13 @@ import Item from "./Item";
 import Divider from "@mui/material/Divider";
 // import Items from "./Items";
 const ItemList = ({ state, categories, dispatch, category }) => {
-  console.log(category)
+  console.log(category);
   const [value, setValue] = useState(category);
 
   const handleChange = (e, newValue) => {
     setValue(newValue);
   };
-  
+
   return (
     <Paper elevation={8} sx={{ margin: "2em 0" }}>
       <TabContext value={value}>
@@ -26,9 +26,8 @@ const ItemList = ({ state, categories, dispatch, category }) => {
           >
             {/* {category==="" ? <Tab label="All" value=""></Tab>:} */}
             {/* <Tab label={category} value={category}/> */}
-            
+
             {categories.map((category) => (
-              
               <Tab
                 label={category}
                 value={category}
@@ -45,61 +44,10 @@ const ItemList = ({ state, categories, dispatch, category }) => {
             ))}
           </TabList>
         </Box>
-        
+
         <TabPanel value={category}>
-         
-          {state.searchResult.length ? (
-              state.searchResult.map((item) => (
-                <Grid item xs={2}>
-                  <Item
-                    state={state}
-                    id={item.id}
-                    name={item.name}
-                    price={item.price}
-                    quantity={item.quantity}
-                    description={item.description}
-                    image={item.image}
-                    category={item.category}
-                    dispatch={dispatch}
-                    ratings={item.ratings}
-                  />
-                </Grid>
-              ))
-            ) : (
-              <>
-                {state.searchKey&&<h1>No Result Found. </h1>}
-              </>
-            )}
-            {!state.searchKey&&state.items.map((item) => (
-            (item.category===category || category==="" ||category=="All")&&<Grid container spacing={2}>
-               <Grid item xs={2}>
-              <Item
-                state={state}
-                id={item.id}
-                name={item.name}
-                price={item.price}
-                quantity={item.quantity}
-                description={item.description}
-                image={item.image}
-                category={item.category}
-                dispatch={dispatch}
-                ratings={item.ratings}
-              />
-            </Grid>
-            </Grid>
-           
-          ))}
-        </TabPanel>
-        {/* <TabPanel value={category}>
           <Grid container spacing={2}>
-            {state.searchKey === "" ? (
-              state.items.length > 0 ? (
-               
-                  
-              ) : (
-                <h1>No Items </h1>
-              )
-            ) : state.searchResult.length ? (
+            {state.searchResult.length ? (
               state.searchResult.map((item) => (
                 <Grid item xs={2}>
                   <Item
@@ -117,13 +65,32 @@ const ItemList = ({ state, categories, dispatch, category }) => {
                 </Grid>
               ))
             ) : (
-              <>
-                <h1>No Result Found. </h1>
-              </>
+              <>{state.searchKey && <h1>No Result Found. </h1>}</>
             )}
+            {!state.searchKey &&
+              state.items.map(
+                (item) =>
+                  (item.category === category ||
+                    category === "" ||
+                    category == "All") && (
+                    <Grid item xs={2}>
+                      <Item
+                        state={state}
+                        id={item.id}
+                        name={item.name}
+                        price={item.price}
+                        quantity={item.quantity}
+                        description={item.description}
+                        image={item.image}
+                        category={item.category}
+                        dispatch={dispatch}
+                        ratings={item.ratings}
+                      />
+                    </Grid>
+                  )
+              )}
           </Grid>
-          <Divider />
-        </TabPanel> */}
+        </TabPanel>
       </TabContext>
     </Paper>
   );

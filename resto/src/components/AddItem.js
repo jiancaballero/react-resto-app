@@ -36,7 +36,7 @@ const AddItem = ({ state, dispatch, id, categories }) => {
     id: id,
     name: "",
     category: "",
-    price: 0,
+    price: "",
     quantity: 0,
     description: "",
     image: "",
@@ -58,6 +58,7 @@ const AddItem = ({ state, dispatch, id, categories }) => {
     setOpen(false);
     showNewCategoryInput(false);
   };
+  // Error message in new category when deleted by backspace
   const handleNewCategoryInput = (e) => {
     setInputCategory(e.target.value);
     setItem({ ...item, category: inputCategory });
@@ -109,12 +110,44 @@ const AddItem = ({ state, dispatch, id, categories }) => {
   };
 
   
-  const addNewItem = () => {
-  
-    // setItem({...item,id:itemID})
-    console.log(item)
+  const duplicate = state.items
+  .map((items) => items)
+  .filter(
+    (itemfilter) =>
+      itemfilter.name
+        .toLowerCase()
+        .trim()
+        .replace(/[^\w\s]/gi, "") ===
+      item.name
+        .toLowerCase()
+        .trim()
+        .replace(/[^\w\s]/gi, "")
+  );
+const addNewItem = () => {
+ console.log(item)
+  if (
+    item.name === "" ||
+    item.category === "" ||
+    item.price === "" ||
+    item.image === ""
+  ) {
+    alert("Please input all required fields");
+  }
+  if (duplicate.length) {
+    alert("Item name already exists");
+  }
+  if (
+    item.name !== "" &&
+    item.category !== "" &&
+    item.price !== "" &&
+    item.image !== "" &&
+    !duplicate.length
+  ) {
     dispatch({ type: "ADD_ITEM", payload: item });
-  };
+    handleClose();
+  }
+};
+
 
   //   TODO: DISPLAY ERROR MESSAGES
   return (
@@ -154,6 +187,9 @@ const AddItem = ({ state, dispatch, id, categories }) => {
                 fullWidth
                 select
                 onChange={handleInput}
+                error={item.category===""}
+                helperText = {item.category === "" && "Required"}
+
               >
                 <MenuItem value="addCategory">
                   <AddIcon fontSize="small" />
@@ -176,6 +212,8 @@ const AddItem = ({ state, dispatch, id, categories }) => {
                 fullWidth
                 variant="standard"
                 required
+                error={inputCategory===""}
+                helperText = {inputCategory === "" && "Required"}
               />
             </Box>
           )}
@@ -190,11 +228,15 @@ const AddItem = ({ state, dispatch, id, categories }) => {
               fullWidth
               variant="standard"
               required
+              error={item.name===""}
+                helperText = {item.name === "" && "Required"}
             />
           </Box>
           <Box sx={{ marginBottom: "1em" }}>
             <TextField
               required
+              error={item.price===""}
+                helperText = {item.price === "" && "Required"}
               name="price"
               autoFocus
               margin="dense"
@@ -222,6 +264,8 @@ const AddItem = ({ state, dispatch, id, categories }) => {
               fullWidth
               label="Image URL"
               variant="standard"
+              error={item.image===""}
+                helperText = {item.image === "" && "Required"}
             />
           </Box>
           <Box sx={{ marginBottom: "1em" }}>
@@ -260,7 +304,7 @@ const AddItem = ({ state, dispatch, id, categories }) => {
           <Button onClick={handleClose}>Cancel</Button>
           <Button onClick={()=>{
             addNewItem();
-            handleClose();
+           
           }}>Submit</Button>
         </DialogActions>
       </Dialog>

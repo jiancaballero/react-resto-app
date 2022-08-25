@@ -556,7 +556,7 @@ function App() {
           ...state,
           searchResult: searchName,
           searchKey: action.payload.input,
-          category:"All"
+          category: "All",
         };
       }
 
@@ -576,6 +576,15 @@ function App() {
                 }
                 return 0;
               }),
+              searchResult: state.searchResult.sort((a, b) => {
+                if (a.name.toLowerCase() < b.name.toLowerCase()) {
+                  return -1;
+                }
+                if (a.name.toLowerCase() > b.name.toLowerCase()) {
+                  return 1;
+                }
+                return 0;
+              }),
             };
 
           case "priceAsc":
@@ -584,12 +593,19 @@ function App() {
               items: state.items.sort((a, b) => {
                 return Math.round(a.price) - Math.round(b.price);
               }),
+              searchResult: state.searchResult.sort((a, b) => {
+                return Math.round(a.price) - Math.round(b.price);
+              }),
+             
             };
 
           case "priceDsc":
             return {
               ...state,
               items: state.items.sort((a, b) => {
+                return b.price - a.price;
+              }),
+              searchResult: state.searchResult.sort((a, b) => {
                 return b.price - a.price;
               }),
             };
@@ -600,11 +616,19 @@ function App() {
               items: state.items.sort((a, b) => {
                 return b.ratings - a.ratings;
               }),
+              searchResult: state.searchResult.sort((a, b) => {
+                return b.ratings - a.ratings;
+              }),
             };
         }
       }
       case "FILTER_ITEMS": {
-        return { ...state, category: action.payload.name, searchResult: [], searchKey:""};
+        return {
+          ...state,
+          category: action.payload.name,
+          searchResult: [],
+          searchKey: "",
+        };
       }
 
       default: {
@@ -615,16 +639,18 @@ function App() {
 
   const [state, dispatch] = useReducer(reducer, initialState);
 
-
   // FIXME: capitalization does not work in duplicates
   const categories = state.items
     .map((item) => item.category)
-    .reduce((category, item) => {
-      if (!category.includes(item)) {
-        category.push(item);
-      }
-      return category;
-    }, ['All']);
+    .reduce(
+      (category, item) => {
+        if (!category.includes(item)) {
+          category.push(item);
+        }
+        return category;
+      },
+      ["All"]
+    );
 
   return (
     <ThemeProvider theme={theme}>
@@ -655,7 +681,6 @@ function App() {
         <Main open={open}>
           <DrawerHeader />
 
-        
           <Box
             sx={{
               display: "flex",
