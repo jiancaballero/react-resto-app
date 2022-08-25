@@ -24,13 +24,17 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Tooltip from "@mui/material/Tooltip";
 import AddIcon from "@mui/icons-material/Add";
 const AddItem = ({ state, dispatch, id, categories }) => {
-  
   const [tags, setTags] = useState([]);
   const [open, setOpen] = React.useState(false);
   const [itemName, setItemName] = useState("");
   const [price, setPrice] = useState(0);
   const [newCategoryInput, showNewCategoryInput] = useState(false);
   const [inputCategory, setInputCategory] = useState("");
+  const [noInputName, checkNoInputName] = useState(false);
+  const [noInputPrice, checkNoInputPrice] = useState(false);
+  const [noInputNewCategory, checkNoInputNewCategory] = useState(false);
+  const [noInputCategory, checkNoInputCategory] = useState(false);
+  const [noInputImage, checkNoInputImage] = useState(false);
   const [isNew, setIsNew] = useState(true);
   const [item, setItem] = useState({
     id: id,
@@ -46,12 +50,6 @@ const AddItem = ({ state, dispatch, id, categories }) => {
 
   const handleClickOpen = () => {
     setOpen(true);
-  };
-
-  const CheckNameError = () => {
-    if (!itemName) {
-      return "Required";
-    }
   };
 
   const handleClose = () => {
@@ -86,34 +84,98 @@ const AddItem = ({ state, dispatch, id, categories }) => {
         setItem({ ...item, isNew: e.target.checked });
         break;
       case "name":
-        setItem({ ...item, name: e.target.value });
+        if (e.target.value !== "") {
+          checkNoInputName(true);
+          setItem({ ...item, name: e.target.value });
+        } else {
+          checkNoInputName(false);
+        
+        }
+        break;
+      case "newCategory":
+        {
+          if (e.target.value !== "") {
+            checkNoInputNewCategory(true);
+            setItem({ ...item, category: e.target.value });
+          } else {
+            checkNoInputNewCategory(false);
+           
+          }
+        }
         break;
       case "category":
         if (e.target.value === "addCategory") {
           showNewCategoryInput(true);
         } else {
           showNewCategoryInput(false);
-          setItem({ ...item, category: e.target.value });
+          if (e.target.value !== "") {
+            checkNoInputCategory(true);
+            setItem({ ...item, category: e.target.value });
+          } else {
+            checkNoInputCategory(false);
+            
+          }
         }
-        // setItem({ ...item, category: e.target.value });
         break;
       case "price":
-        setItem({ ...item, price: e.target.value });
+        if (e.target.value !== "") {
+          checkNoInputPrice(true);
+          setItem({ ...item, price: e.target.value });
+        } else {
+          checkNoInputPrice(false);
+         
+        }
+
         break;
       case "description":
         setItem({ ...item, description: e.target.value });
         break;
       case "image":
-        setItem({ ...item, image: e.target.value });
+        if (e.target.value === "") {
+          checkNoInputImage(true);
+        } else {
+          checkNoInputImage(false);
+          setItem({ ...item, image: e.target.value });
+        }
     }
   };
 
-  
+  const duplicate = state.items
+    .map((items) => items)
+    .filter(
+      (itemfilter) =>
+        itemfilter.name
+          .toLowerCase()
+          .trim()
+          .replace(/[^\w\s]/gi, "") ===
+        item.name
+          .toLowerCase()
+          .trim()
+          .replace(/[^\w\s]/gi, "")
+    );
   const addNewItem = () => {
-  
-    // setItem({...item,id:itemID})
-    console.log(item)
-    dispatch({ type: "ADD_ITEM", payload: item });
+    console.log(duplicate);
+    if (
+      item.name === "" ||
+      item.category === "" ||
+      item.price === "" ||
+      item.image === ""
+    ) {
+      alert("Please input all required fields");
+    }
+    if (duplicate.length) {
+      alert("Item name already exists");
+    }
+    if (
+      item.name !== "" &&
+      item.category !== "" &&
+      item.price !== "" &&
+      item.image !== "" &&
+      !duplicate.length
+    ) {
+      dispatch({ type: "ADD_ITEM", payload: item });
+      handleClose();
+    }
   };
 
   //   TODO: DISPLAY ERROR MESSAGES
@@ -129,13 +191,13 @@ const AddItem = ({ state, dispatch, id, categories }) => {
       </Tooltip>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Add an item</DialogTitle>
-        <Divider/>
+        <Divider />
         <DialogContent>
           <DialogContentText gutterBottom>
             Please fill out all forms. Make sure the item name has no
             duplicates.
           </DialogContentText>
-         
+
           {/* CHECKBOX */}
           <Box sx={{ margin: "1em 0" }}>
             <FormControlLabel
@@ -149,11 +211,13 @@ const AddItem = ({ state, dispatch, id, categories }) => {
             <Box sx={{ marginBottom: "1em" }}>
               <TextField
                 required
-                name="category"
+                name="newCategory"
                 label="Add/Select Category"
                 fullWidth
                 select
                 onChange={handleInput}
+                error={noInputCategory === false}
+                helperText={noInputCategory === false && "Required"}
               >
                 <MenuItem value="addCategory">
                   <AddIcon fontSize="small" />
@@ -176,6 +240,8 @@ const AddItem = ({ state, dispatch, id, categories }) => {
                 fullWidth
                 variant="standard"
                 required
+                error={noInputNewCategory === false}
+                helperText={noInputNewCategory === false && "Required"}
               />
             </Box>
           )}
@@ -190,10 +256,14 @@ const AddItem = ({ state, dispatch, id, categories }) => {
               fullWidth
               variant="standard"
               required
+              error={noInputName === false}
+              helperText={noInputName === false && "Required"}
             />
           </Box>
           <Box sx={{ marginBottom: "1em" }}>
             <TextField
+              error={noInputPrice === false}
+              helperText={noInputPrice === false && "Required"}
               required
               name="price"
               autoFocus
@@ -214,6 +284,8 @@ const AddItem = ({ state, dispatch, id, categories }) => {
           </Box>
           <Box sx={{ marginBottom: "1em" }}>
             <TextField
+              error={noInputImage === false}
+              helperText={noInputImage === false && "Required"}
               onChange={handleInput}
               name="image"
               autoFocus
@@ -258,10 +330,13 @@ const AddItem = ({ state, dispatch, id, categories }) => {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={()=>{
-            addNewItem();
-            handleClose();
-          }}>Submit</Button>
+          <Button
+            onClick={() => {
+              addNewItem();
+            }}
+          >
+            Submit
+          </Button>
         </DialogActions>
       </Dialog>
     </div>
