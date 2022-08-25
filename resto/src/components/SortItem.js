@@ -10,88 +10,93 @@ import CurrencyRubleIcon from "@mui/icons-material/CurrencyRuble";
 import StarIcon from "@mui/icons-material/Star";
 import Tooltip from "@mui/material/Tooltip";
 const SortItem = ({ dispatch }) => {
-  const [sortEl, setSortEl] = useState(null);
-  const open = sortEl;
-  const handleClick = (e) => {
-    setSortEl(e.currentTarget);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
-    setSortEl(null);
+    setAnchorEl(null);
   };
   return (
     <div>
-      <Tooltip title="Sort Items" placement="left">
-        <IconButton
-          aria-label="send"
-          size="large"
-          id="sortBtn"
-          onClick={handleClick}
-          aria-control={open ? "item-sort" : undefined}
-          aria-haspopup="true"
-          aria-expanded={open ? "true" : undefined}
-        >
-          <SortIcon fontSize="large" />
-        </IconButton>
-      </Tooltip>
-
-      <Menu
-        id="item-sort"
-        sortEl={sortEl}
-        open={open}
-        MenuListProps={{ "aria-labelledby": "sortBtn" }}
-        onClose={handleClose}
-        
+    <Tooltip title="Sort Items" placement="left">
+      <IconButton
+        id="demo-positioned-button"
+        aria-controls={open ? "demo-positioned-menu" : undefined}
+        aria-haspopup="true"
+        aria-expanded={open ? "true" : undefined}
+        onClick={handleClick}
       >
-        <MenuItem
-          onClick={() => {
-            handleClose();
-            dispatch({
-                type:"SORT_ITEMS",
-                payload:{sortBy:"name"}
-            })
-          }}
-        >
-          <SortByAlphaIcon fontSize="small" sx={{marginRight:".3em"}}/>
-          Name (A-Z)
-        </MenuItem>
-        <MenuItem
-          onClick={() => {
-            handleClose();
-            dispatch({
-                type:"SORT_ITEMS",
-                payload:{sortBy:"priceAsc"}
-            })
-          }}
-        >
-          <CurrencyRubleIcon fontSize="small" sx={{marginRight:".3em"}}/>
-          Price (Lowest-Highest)
-        </MenuItem>
-        <MenuItem
-          onClick={() => {
-            handleClose();
-            dispatch({
-                type:"SORT_ITEMS",
-                payload:{sortBy:"priceDsc"}
-            })
-          }}
-        >
-          <CurrencyRubleIcon fontSize="small" sx={{marginRight:".3em"}} />
-          Price (Highest-Lowest)
-        </MenuItem>
-        <MenuItem
-          onClick={() => {
-            handleClose();
-            dispatch({
-                type:"SORT_ITEMS",
-                payload:{sortBy:"ratings"}
-            })
-          }}
-        >
-          <StarIcon fontSize="small"sx={{marginRight:".3em"}} />
-          Ratings (Highest-Lowest)
-        </MenuItem>
-      </Menu>
-    </div>
+        <SortIcon fontSize="large" />
+      </IconButton>
+    </Tooltip>
+
+    <Menu
+      id="demo-positioned-menu"
+      aria-labelledby="demo-positioned-button"
+      anchorEl={anchorEl}
+      open={open}
+      onClose={handleClose}
+      anchorOrigin={{
+        vertical: "top",
+        horizontal: "left",
+      }}
+      transformOrigin={{
+        vertical: "top",
+        horizontal: "left",
+      }}
+    >
+      <MenuItem
+        onClick={() => {
+          handleClose();
+          dispatch({
+            type: "SORT_ITEMS",
+            payload: { sortBy: "name" },
+          });
+        }}
+      >
+        <SortByAlphaIcon fontSize="small" sx={{ marginRight: ".3em" }} />
+        Name (A-Z)
+      </MenuItem>
+      <MenuItem
+        onClick={() => {
+          handleClose();
+          dispatch({
+            type: "SORT_ITEMS",
+            payload: { sortBy: "priceAsc" },
+          });
+        }}
+      >
+        <CurrencyRubleIcon fontSize="small" sx={{ marginRight: ".3em" }} />
+        Price (Lowest-Highest)
+      </MenuItem>
+      <MenuItem
+        onClick={() => {
+          handleClose();
+          dispatch({
+            type: "SORT_ITEMS",
+            payload: { sortBy: "priceDsc" },
+          });
+        }}
+      >
+        <CurrencyRubleIcon fontSize="small" sx={{ marginRight: ".3em" }} />
+        Price (Highest-Lowest)
+      </MenuItem>
+      <MenuItem
+        onClick={() => {
+          handleClose();
+          dispatch({
+            type: "SORT_ITEMS",
+            payload: { sortBy: "ratings" },
+          });
+        }}
+      >
+        <StarIcon fontSize="small" sx={{ marginRight: ".3em" }} />
+        Ratings (Highest-Lowest)
+      </MenuItem>
+    </Menu>
+  </div>
   );
 };
 

@@ -24,7 +24,6 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Tooltip from "@mui/material/Tooltip";
 import AddIcon from "@mui/icons-material/Add";
 const AddItem = ({ state, dispatch, id, categories }) => {
-  
   const [tags, setTags] = useState([]);
   const [open, setOpen] = React.useState(false);
   const [itemName, setItemName] = useState("");
@@ -58,7 +57,7 @@ const AddItem = ({ state, dispatch, id, categories }) => {
     setOpen(false);
     showNewCategoryInput(false);
   };
-  // Error message in new category when deleted by backspace
+  // FIXME:Error message in new category doesnt apply when input is deleted by backspace
   const handleNewCategoryInput = (e) => {
     setInputCategory(e.target.value);
     setItem({ ...item, category: inputCategory });
@@ -108,50 +107,54 @@ const AddItem = ({ state, dispatch, id, categories }) => {
         setItem({ ...item, image: e.target.value });
     }
   };
-
-  
+ 
   const duplicate = state.items
-  .map((items) => items)
-  .filter(
-    (itemfilter) =>
-      itemfilter.name
-        .toLowerCase()
-        .trim()
-        .replace(/[^\w\s]/gi, "") ===
-      item.name
-        .toLowerCase()
-        .trim()
-        .replace(/[^\w\s]/gi, "")
-  );
-const addNewItem = () => {
- console.log(item)
-  if (
-    item.name === "" ||
-    item.category === "" ||
-    item.price === "" ||
-    item.image === ""
-  ) {
-    alert("Please input all required fields");
-  }
-  if (duplicate.length) {
-    alert("Item name already exists");
-  }
-  if (
-    item.name !== "" &&
-    item.category !== "" &&
-    item.price !== "" &&
-    item.image !== "" &&
-    !duplicate.length
-  ) {
-    dispatch({ type: "ADD_ITEM", payload: item });
-    handleClose();
-  }
-};
+    .map((items) => items)
+    .filter(
+      (itemfilter) =>
+        itemfilter.name
+          .toLowerCase()
+          .trim()
+          .replace(/[^\w\s]/gi, "") ===
+        item.name
+          .toLowerCase()
+          .trim()
+          .replace(/[^\w\s]/gi, "")
+    );
+  const addNewItem = (e) => {
+    if (
+      item.name === "" ||
+      item.category === "" ||
+      item.price === "" ||
+      item.image === ""
+    ) {
+      alert("Please input all required fields");
+    }
+    if (duplicate.length) {
+      alert("Item name already exists");
+    }
+    if (
+      item.name !== "" &&
+      item.category !== "" &&
+      item.price !== "" &&
+      item.image !== "" &&
+      !duplicate.length
+    ) {
+      
+      dispatch({ type: "ADD_ITEM", payload: item} );
+     
+      handleClose();
+    
+    }
+  };
 
+  // MESSAGES
+ 
+ 
 
-  //   TODO: DISPLAY ERROR MESSAGES
   return (
     <div>
+      
       <Tooltip placement="left" title="Add Item">
         <Fab
           sx={{ position: "fixed", bottom: 16, right: 16 }}
@@ -162,13 +165,13 @@ const addNewItem = () => {
       </Tooltip>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Add an item</DialogTitle>
-        <Divider/>
+        <Divider />
         <DialogContent>
           <DialogContentText gutterBottom>
             Please fill out all forms. Make sure the item name has no
             duplicates.
           </DialogContentText>
-         
+
           {/* CHECKBOX */}
           <Box sx={{ margin: "1em 0" }}>
             <FormControlLabel
@@ -187,18 +190,20 @@ const addNewItem = () => {
                 fullWidth
                 select
                 onChange={handleInput}
-                error={item.category===""}
-                helperText = {item.category === "" && "Required"}
-
+                error={item.category === ""}
+                helperText={item.category === "" && "Required"}
               >
                 <MenuItem value="addCategory">
                   <AddIcon fontSize="small" />
                   Add New Category
                 </MenuItem>
 
-                {categories.map((category) => (
-                  <MenuItem value={category}>{category}</MenuItem>
-                ))}
+                {categories.map(
+                  (category) =>
+                    category !== "All" && (
+                      <MenuItem value={category}>{category}</MenuItem>
+                    )
+                )}
               </TextField>
             </Box>
           ) : (
@@ -212,8 +217,8 @@ const addNewItem = () => {
                 fullWidth
                 variant="standard"
                 required
-                error={inputCategory===""}
-                helperText = {inputCategory === "" && "Required"}
+                error={inputCategory === ""}
+                helperText={inputCategory === "" && "Required"}
               />
             </Box>
           )}
@@ -228,15 +233,15 @@ const addNewItem = () => {
               fullWidth
               variant="standard"
               required
-              error={item.name===""}
-                helperText = {item.name === "" && "Required"}
+              error={item.name === ""}
+              helperText={item.name === "" && "Required"}
             />
           </Box>
           <Box sx={{ marginBottom: "1em" }}>
             <TextField
               required
-              error={item.price===""}
-                helperText = {item.price === "" && "Required"}
+              error={item.price === ""}
+              helperText={item.price === "" && "Required"}
               name="price"
               autoFocus
               margin="dense"
@@ -264,8 +269,8 @@ const addNewItem = () => {
               fullWidth
               label="Image URL"
               variant="standard"
-              error={item.image===""}
-                helperText = {item.image === "" && "Required"}
+              error={item.image === ""}
+              helperText={item.image === "" && "Required"}
             />
           </Box>
           <Box sx={{ marginBottom: "1em" }}>
@@ -302,10 +307,13 @@ const addNewItem = () => {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={()=>{
-            addNewItem();
-           
-          }}>Submit</Button>
+          <Button
+            onClick={() => {
+              addNewItem();
+            }}
+          >
+            Submit
+          </Button>
         </DialogActions>
       </Dialog>
     </div>

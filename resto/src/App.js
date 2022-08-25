@@ -27,72 +27,16 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
 import { styled, useTheme } from "@mui/material/styles";
 import SortItem from "./components/SortItem";
-import SuccessMessage from "./components/SuccessMessage";
+
+import { StaticDatePicker } from "@mui/lab";
+import SuccessAddItem from "./components/SuccessAddItem";
+import SuccessEditItem from "./components/SuccessEditItem";
+import SuccessOrderItem from "./components/SuccessOrderItem";
+import ErrorRemoveItem from "./components/ErrorRemoveItem";
+import ErrorRemoveCart from "./components/ErrorRemoveCart";
+import { extendSxProp } from "@mui/system";
 
 function App() {
-  // CUSTOMED THEME
-  const theme = createTheme({
-    typography: { fontFamily: ["Raleway", "Arial"].join(",") },
-  });
-  // REACT UI STYLED COMPONENT DRAWER
-  const drawerWidth = 380;
-
-  const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
-    ({ theme, open }) => ({
-      flexGrow: 1,
-      padding: theme.spacing(3),
-      transition: theme.transitions.create("margin", {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen,
-      }),
-      marginRight: -drawerWidth,
-      ...(open && {
-        transition: theme.transitions.create("margin", {
-          easing: theme.transitions.easing.easeOut,
-          duration: theme.transitions.duration.enteringScreen,
-        }),
-        marginRight: 0,
-      }),
-    })
-  );
-
-  const AppBar = styled(MuiAppBar, {
-    shouldForwardProp: (prop) => prop !== "open",
-  })(({ theme, open }) => ({
-    transition: theme.transitions.create(["margin", "width"], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    ...(open && {
-      width: `calc(100% - ${drawerWidth}px)`,
-      transition: theme.transitions.create(["margin", "width"], {
-        easing: theme.transitions.easing.easeOut,
-        duration: theme.transitions.duration.enteringScreen,
-      }),
-      marginRight: drawerWidth,
-    }),
-  }));
-
-  const DrawerHeader = styled("div")(({ theme }) => ({
-    display: "flex",
-
-    alignItems: "center",
-    padding: theme.spacing(0, 1),
-    // necessary for content to be below app bar
-    ...theme.mixins.toolbar,
-    justifyContent: "flex-start",
-  }));
-
-  const [open, setOpen] = React.useState(false);
-
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
-
-  const handleDrawerClose = () => {
-    setOpen(false);
-  };
-
   // INITIAL STATE
   const initialState = {
     items: [
@@ -350,14 +294,90 @@ function App() {
     cartCount: 0,
     searchKey: "",
     category: "",
+    successAdd: false,
+    successEdit: false,
+    successOrder: false,
+    errorRemove: false,
+    errorRemoveCart: false,
+  };
+  // CUSTOMED THEME
+  const theme = createTheme({
+    typography: { fontFamily: ["Raleway", "Arial"].join(",") },
+  });
+  // REACT UI STYLED COMPONENT DRAWER
+  const drawerWidth = 380;
+
+  const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
+    ({ theme, open }) => ({
+      flexGrow: 1,
+      padding: theme.spacing(3),
+      transition: theme.transitions.create("margin", {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen,
+      }),
+      marginRight: -drawerWidth,
+      ...(open && {
+        transition: theme.transitions.create("margin", {
+          easing: theme.transitions.easing.easeOut,
+          duration: theme.transitions.duration.enteringScreen,
+        }),
+        marginRight: 0,
+      }),
+    })
+  );
+
+  const AppBar = styled(MuiAppBar, {
+    shouldForwardProp: (prop) => prop !== "open",
+  })(({ theme, open }) => ({
+    transition: theme.transitions.create(["margin", "width"], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    ...(open && {
+      width: `calc(100% - ${drawerWidth}px)`,
+      transition: theme.transitions.create(["margin", "width"], {
+        easing: theme.transitions.easing.easeOut,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
+      marginRight: drawerWidth,
+    }),
+  }));
+
+  const DrawerHeader = styled("div")(({ theme }) => ({
+    display: "flex",
+
+    alignItems: "center",
+    padding: theme.spacing(0, 1),
+    // necessary for content to be below app bar
+    ...theme.mixins.toolbar,
+    justifyContent: "flex-start",
+  }));
+
+  const [open, setOpen] = React.useState(false);
+
+  const handleDrawerOpen = (e) => {
+    e.preventDefault();
+    setOpen(true);
   };
 
-  // const [cartCount, setCartCount] = useState(0);
-  //set up reducer
+  const handleDrawerClose = (e) => {
+    e.preventDefault();
+    setOpen(false);
+  };
+
+  // SET UP REDUCER CASES
   const reducer = (state, action) => {
     switch (action.type) {
       case "ADD_ITEM": {
-        return { ...state, items: [...state.items, action.payload] };
+        return {
+          ...state,
+          items: [action.payload, ...state.items],
+          successAdd: true,
+          successEdit: false,
+          successOrder: false,
+          errorRemove: false,
+          errorRemoveCart: false,
+        };
       }
 
       case "DELETE_ITEM": {
@@ -365,6 +385,11 @@ function App() {
           ...state,
           items: state.items.filter((item) => item.id !== action.payload.id),
           cart: state.cart.filter((item) => item.id !== action.payload.id),
+          errorRemove: true,
+          successEdit: false,
+          successOrder: false,
+          successAdd: false,
+          errorRemoveCart: false,
         };
       }
 
@@ -379,6 +404,11 @@ function App() {
         return {
           ...state,
           items: updateItems,
+          errorRemove: false,
+          successEdit: false,
+          successOrder: false,
+          successAdd: false,
+          errorRemoveCart: false,
         };
       }
 
@@ -395,6 +425,11 @@ function App() {
               return item;
             }),
           ],
+          errorRemove: false,
+          successEdit: false,
+          successOrder: false,
+          successAdd: false,
+          errorRemoveCart: false,
         };
       }
 
@@ -422,8 +457,16 @@ function App() {
         } else {
           alert("Please add a quantity");
         }
-        return { ...state };
+        return {
+          ...state,
+          successOrder: true,
+          errorRemove: false,
+          successEdit: false,
+          successAdd: false,
+          errorRemoveCart: false,
+        };
       }
+
       case "EDIT_ITEM": {
         const itemID = action.payload.id;
         const itemName = action.payload.name;
@@ -449,24 +492,18 @@ function App() {
             item.image = itemImage;
             item.description = itemDescription;
           });
-        return { ...state };
+        return {
+          ...state,
+          successEdit: true,
+          errorRemove: false,
+          successOrder: false,
+          successAdd: false,
+          errorRemoveCart: false,
+        };
       }
       // FIXME:DOES NOT REMOVE ITEM FROM ARRAY WHEN IT HAS NO QUANTIY
       case "DECREASE_CART_QUANTITY": {
         const itemID = action.payload.id;
-        // let newCart = state.cart.map((item, index) => {
-        //   if (item.id === itemID) {
-        //     if (item.quantity > 0) {
-        //       item.quantity -= 1;
-
-        //     }
-        //     if (item.quantity <= 0) {
-        //       debugger
-        //       return state.cart.splice(index, 1);
-        //     }
-        //   }
-        //   return item;
-        // });
 
         return {
           ...state,
@@ -485,6 +522,11 @@ function App() {
               return item;
             }),
           ],
+          errorRemove: false,
+          successEdit: false,
+          successOrder: false,
+          successAdd: false,
+          errorRemoveCart: false,
         };
       }
       case "INCREASE_CART_QUANTITY": {
@@ -502,6 +544,11 @@ function App() {
               return item;
             }),
           ],
+          errorRemove: false,
+          successEdit: false,
+          successOrder: false,
+          successAdd: false,
+          errorRemoveCart: false,
         };
       }
       case "DELETE_CART_ITEM": {
@@ -510,6 +557,11 @@ function App() {
           ...state,
           items: state.items,
           cart: state.cart.filter((item) => item.id !== action.payload.id),
+          errorRemoveCart: true,
+          errorRemove: false,
+          successEdit: false,
+          successOrder: false,
+          successAdd: false,
         };
       }
       case "TOTAL_AMOUNT": {
@@ -545,7 +597,7 @@ function App() {
         return { ...state };
       }
       case "SEARCH_ITEM": {
-        const searchName = state.items.filter((item) => {
+        const result = state.items.filter((item) => {
           return Object.values(item)
             .join("")
             .toLowerCase()
@@ -554,9 +606,14 @@ function App() {
 
         return {
           ...state,
-          searchResult: searchName,
+          searchResult: result,
           searchKey: action.payload.input,
           category: "All",
+          errorRemove: false,
+          successEdit: false,
+          successOrder: false,
+          successAdd: false,
+          errorRemoveCart: false,
         };
       }
 
@@ -585,6 +642,11 @@ function App() {
                 }
                 return 0;
               }),
+              errorRemove: false,
+              successEdit: false,
+              successOrder: false,
+              successAdd: false,
+              errorRemoveCart: false,
             };
 
           case "priceAsc":
@@ -596,7 +658,11 @@ function App() {
               searchResult: state.searchResult.sort((a, b) => {
                 return Math.round(a.price) - Math.round(b.price);
               }),
-             
+              errorRemove: false,
+              successEdit: false,
+              successOrder: false,
+              successAdd: false,
+              errorRemoveCart: false,
             };
 
           case "priceDsc":
@@ -608,6 +674,11 @@ function App() {
               searchResult: state.searchResult.sort((a, b) => {
                 return b.price - a.price;
               }),
+              errorRemove: false,
+              successEdit: false,
+              successOrder: false,
+              successAdd: false,
+              errorRemoveCart: false,
             };
 
           case "ratings":
@@ -619,6 +690,11 @@ function App() {
               searchResult: state.searchResult.sort((a, b) => {
                 return b.ratings - a.ratings;
               }),
+              errorRemove: false,
+              successEdit: false,
+              successOrder: false,
+              successAdd: false,
+              errorRemoveCart: false,
             };
         }
       }
@@ -628,6 +704,11 @@ function App() {
           category: action.payload.name,
           searchResult: [],
           searchKey: "",
+          errorRemove: false,
+          successEdit: false,
+          successOrder: false,
+          successAdd: false,
+          errorRemoveCart: false,
         };
       }
 
@@ -680,6 +761,11 @@ function App() {
         {/* MAIN CONTENT */}
         <Main open={open}>
           <DrawerHeader />
+          <SuccessAddItem success={state.successAdd} />
+          <SuccessEditItem success={state.successEdit} />
+          <SuccessOrderItem success={state.successOrder} />
+          <ErrorRemoveItem error={state.errorRemove} />
+          <ErrorRemoveCart error={state.errorRemoveCart} />
 
           <Box
             sx={{
