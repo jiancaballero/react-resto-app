@@ -93,6 +93,7 @@ const AddItem = ({ state, dispatch, id, categories }) => {
         }
         break;
       case "newCategory":
+        
         {
           if (e.target.value !== "") {
             checkNoInputNewCategory(true);
@@ -131,11 +132,12 @@ const AddItem = ({ state, dispatch, id, categories }) => {
         setItem({ ...item, description: e.target.value });
         break;
       case "image":
-        if (e.target.value === "") {
+        if (e.target.value !== "") {
           checkNoInputImage(true);
+          setItem({ ...item, image: e.target.value });
         } else {
           checkNoInputImage(false);
-          setItem({ ...item, image: e.target.value });
+          
         }
     }
   };
@@ -154,7 +156,7 @@ const AddItem = ({ state, dispatch, id, categories }) => {
           .replace(/[^\w\s]/gi, "")
     );
   const addNewItem = () => {
-    console.log(duplicate);
+   console.log(item)
     if (
       item.name === "" ||
       item.category === "" ||
@@ -211,7 +213,7 @@ const AddItem = ({ state, dispatch, id, categories }) => {
             <Box sx={{ marginBottom: "1em" }}>
               <TextField
                 required
-                name="newCategory"
+                name="category"
                 label="Add/Select Category"
                 fullWidth
                 select
@@ -232,7 +234,7 @@ const AddItem = ({ state, dispatch, id, categories }) => {
           ) : (
             <Box sx={{ marginBottom: "1em" }}>
               <TextField
-                onChange={handleNewCategoryInput}
+                onChange={handleInput}
                 name="newCategory"
                 autoFocus
                 margin="dense"

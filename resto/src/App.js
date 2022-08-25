@@ -577,7 +577,7 @@ function App() {
             return {
               ...state,
               items: state.items.sort((a, b) => {
-                return a.price - b.price;
+                return Math.round(a.price) - Math.round(b.price);
               }),
             };
 
