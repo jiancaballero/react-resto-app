@@ -28,7 +28,6 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { styled, useTheme } from "@mui/material/styles";
 import SortItem from "./components/SortItem";
 
-
 function App() {
   // CUSTOMED THEME
   const theme = createTheme({
@@ -105,6 +104,7 @@ function App() {
         description: "",
         image:
           "https://s3-ap-northeast-1.amazonaws.com/tdjcom/goods/main_pic122_1_1544852299.jpg",
+        ratings: 4,
       },
       {
         id: uuidv4(),
@@ -115,6 +115,7 @@ function App() {
         description: "",
         image:
           "https://bentoya.ae/wp-content/uploads/2021/05/EBI-TEMPURA-BENTO_s.jpg",
+        ratings: 3,
       },
       {
         id: uuidv4(),
@@ -125,6 +126,7 @@ function App() {
         description: "",
         image:
           "https://moonsushi.co.nz/wp-content/uploads/2022/03/Teriyaki-Salmon-28-1.jpg",
+        ratings: 3,
       },
 
       {
@@ -136,6 +138,7 @@ function App() {
         description: "",
         image:
           "https://media-cdn.tripadvisor.com/media/photo-s/18/8a/ff/69/beef-teriyaki-bento-box.jpg",
+        ratings: 3.5,
       },
       {
         id: uuidv4(),
@@ -145,6 +148,7 @@ function App() {
         quantity: 0,
         description: "",
         image: "https://image.entabe.jp/upload/20210714/images/sub3.jpg",
+        ratings: 2.5,
       },
       {
         id: uuidv4(),
@@ -154,6 +158,7 @@ function App() {
         quantity: 0,
         description: "",
         image: "https://image.entabe.jp/upload/20210115/images/sub2_3.jpg",
+        ratings: 3,
       },
 
       {
@@ -165,6 +170,7 @@ function App() {
         description: "",
         image:
           "https://sudachirecipes.com/wp-content/uploads/2021/06/chicken-katsu-curry-7-1536x1024.jpg",
+        ratings: 5,
       },
       {
         id: uuidv4(),
@@ -175,6 +181,7 @@ function App() {
         description: "",
         image:
           "https://salu-salo.com/wp-content/uploads/2016/02/Tonkatsu-Japanese-Pork-Cutlets-3.jpg",
+        ratings: 5,
       },
       {
         id: uuidv4(),
@@ -185,6 +192,7 @@ function App() {
         description: "",
         image:
           "https://i1.wp.com/seonkyounglongest.com/wp-content/uploads/2020/10/Cheese-Tonkatsu-10-mini.jpg?fit=1000%2C667&ssl=1",
+        ratings: 5,
       },
       {
         id: uuidv4(),
@@ -195,6 +203,7 @@ function App() {
         description: "",
         image:
           "https://gurunavi.com/en/japanfoodie/article/katsu/img/04_Katsu.jpg",
+        ratings: 4.5,
       },
 
       {
@@ -206,6 +215,7 @@ function App() {
         description: "",
         image:
           "https://pickledplum.com/wp-content/uploads/2018/02/shoyu-ramen-1-1200.jpg",
+        ratings: 3,
       },
       {
         id: uuidv4(),
@@ -216,6 +226,7 @@ function App() {
         description: "",
         image:
           "http://cdn.shopify.com/s/files/1/0111/1729/7722/articles/shutterstock_697241275_tonkotsu_ramen-landscape.jpg?v=1562316760",
+        ratings: 4.5,
       },
       {
         id: uuidv4(),
@@ -226,6 +237,7 @@ function App() {
         description: "",
         image:
           "https://i.guim.co.uk/img/media/4f9c291b0a24383c031840ae85f4cddb393f99a6/0_323_3648_2189/master/3648.jpg?width=1200&height=1200&quality=85&auto=format&fit=crop&s=72c84cc785c64e75861ee2da1f3c4a7c",
+        ratings: 4,
       },
 
       {
@@ -237,6 +249,7 @@ function App() {
         description: "",
         image:
           "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTVxw1PRAujhKXs6r3Zd1vkSF7tGdCGM0b-PA&usqp=CAU",
+        ratings: 3,
       },
       {
         id: uuidv4(),
@@ -247,6 +260,7 @@ function App() {
         description: "",
         image:
           "https://www.thespruceeats.com/thmb/5l0NBRobJl8DPu5CisaX0fwymT4=/3000x2000/filters:fill(auto,1)/potato-korokke-2031283-hero-01-5edf6479ce8446a29f36769d2022728a.jpg",
+        ratings: 4,
       },
       {
         id: uuidv4(),
@@ -257,6 +271,7 @@ function App() {
         description: "",
         image:
           "https://i.pinimg.com/736x/59/73/d2/5973d2dab2c1199df04af66c18fadabb--shrimp-dishes-shrimp-pasta.jpg",
+        ratings: 4,
       },
 
       {
@@ -268,6 +283,7 @@ function App() {
         description: "",
         image:
           "https://mychefrecipe.com/wp-content/uploads/2021/01/Gyozas-presentation-04-650.jpg",
+        ratings: 4,
       },
 
       // DESSERT
@@ -280,6 +296,7 @@ function App() {
         description: "",
         image:
           "https://www.lifeloveandsugar.com/wp-content/uploads/2017/01/Mini-Tiramisu-Trifles2-2.jpg",
+        ratings: 3.5,
       },
       {
         id: uuidv4(),
@@ -290,6 +307,7 @@ function App() {
         description: "",
         image:
           "https://www.wandercooks.com/wp-content/uploads/2022/03/matcha-green-tea-ice-cream-3-683x1024.jpg",
+        ratings: 3,
       },
 
       // DRINKS
@@ -536,31 +554,48 @@ function App() {
 
         return { ...state, searchResult: searchName };
       }
+      // FIXME: decimal values are not counted
       case "SORT_ITEMS": {
-        const sort = action.payload.sortBy
+        const sort = action.payload.sortBy;
 
-        switch(sort){
-          case "name": return {...state, items:state.items.sort((a,b)=>{
-            if(a.name.toLowerCase()<b.name.toLowerCase()){
-              return -1
-            }
-            if(a.name.toLowerCase()>b.name.toLowerCase()){
-              return 1
-            }
-            return 0
-          })} 
-     
-          case "priceAsc": return{...state, items:state.items.sort((a,b)=>{
-            return a.price-b.price;
-          })}
-         
-          case "priceDsc": return{...state, items:state.items.sort((a,b)=>{
-            return b.price-a.price;
-          })}
-          
-          case "ratings": return{...state, items:state.items.sort((a,b)=>{
-            return b.ratings-a.ratings;
-          })}
+        switch (sort) {
+          case "name":
+            return {
+              ...state,
+              items: state.items.sort((a, b) => {
+                if (a.name.toLowerCase() < b.name.toLowerCase()) {
+                  return -1;
+                }
+                if (a.name.toLowerCase() > b.name.toLowerCase()) {
+                  return 1;
+                }
+                return 0;
+              }),
+            };
+
+          case "priceAsc":
+            return {
+              ...state,
+              items: state.items.sort((a, b) => {
+                return a.price - b.price;
+              }),
+            };
+
+          case "priceDsc":
+            return {
+              ...state,
+              items: state.items.sort((a, b) => {
+                return b.price - a.price;
+              }),
+            };
+
+          case "ratings":
+            return {
+              ...state,
+              items: state.items.sort((a, b) => {
+                return b.ratings - a.ratings;
+              }),
+            };
         }
       }
 
@@ -612,10 +647,16 @@ function App() {
         <Main open={open}>
           <DrawerHeader />
           {/* FIXME: klaging natatarget kada click ng button sa ibang feature */}
-          <Box sx={{display:"flex", alignItems: "center", justifyContent:"space-between"}}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
             <SearchItem dispatch={dispatch} />
-            <SortItem dispatch={dispatch}  />
-            
+            <SortItem dispatch={dispatch} />
+
             <AddItem
               state={state}
               id={uuidv4()}

@@ -54,6 +54,7 @@ const ItemList = ({ state, categories, dispatch }) => {
                       image={item.image}
                       category={item.category}
                       dispatch={dispatch}
+                      ratings={item.ratings}
                     />
                   </Grid>
                 ))
@@ -73,6 +74,7 @@ const ItemList = ({ state, categories, dispatch }) => {
                     image={item.image}
                     category={item.category}
                     dispatch={dispatch}
+                    ratings={item.ratings}
                   />
                 </Grid>
               ))
@@ -103,6 +105,7 @@ const ItemList = ({ state, categories, dispatch }) => {
                         image={item.image}
                         category={item.category}
                         dispatch={dispatch}
+                        ratings={item.ratings}
                       />
                     </Grid>
                   ))
@@ -122,6 +125,7 @@ const ItemList = ({ state, categories, dispatch }) => {
                     image={item.image}
                     category={item.category}
                     dispatch={dispatch}
+                    ratings={item.ratings}
                   />
                 </Grid>
               ))

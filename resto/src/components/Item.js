@@ -19,6 +19,7 @@ import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditItem from "./EditItem";
+import Ratings from "./Ratings";
 const Item = ({
   id,
   name,
@@ -26,6 +27,7 @@ const Item = ({
   quantity,
   description,
   image,
+  ratings,
   dispatch,
   orderItems,
   deleteItem,
@@ -43,6 +45,7 @@ const Item = ({
           category={category}
           description={description}
           image={image}
+         
         />
         <IconButton
         
@@ -77,6 +80,7 @@ const Item = ({
             {price}
           </Typography>
         </Box>
+        <Ratings ratings={ratings}/>
         <Typography gutterBottom variant="body2" component="div">
           {description}
         </Typography>

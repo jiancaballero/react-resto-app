@@ -51,7 +51,7 @@ const SortItem = ({ dispatch }) => {
             })
           }}
         >
-          <SortByAlphaIcon fontSize="small" />
+          <SortByAlphaIcon fontSize="small" sx={{marginRight:".3em"}}/>
           Name (A-Z)
         </MenuItem>
         <MenuItem
@@ -63,7 +63,7 @@ const SortItem = ({ dispatch }) => {
             })
           }}
         >
-          <CurrencyRubleIcon fontSize="small" />
+          <CurrencyRubleIcon fontSize="small" sx={{marginRight:".3em"}}/>
           Price (Lowest-Highest)
         </MenuItem>
         <MenuItem
@@ -75,7 +75,7 @@ const SortItem = ({ dispatch }) => {
             })
           }}
         >
-          <CurrencyRubleIcon fontSize="small" />
+          <CurrencyRubleIcon fontSize="small" sx={{marginRight:".3em"}} />
           Price (Highest-Lowest)
         </MenuItem>
         <MenuItem
@@ -87,7 +87,7 @@ const SortItem = ({ dispatch }) => {
             })
           }}
         >
-          <StarIcon fontSize="small" />
+          <StarIcon fontSize="small"sx={{marginRight:".3em"}} />
           Ratings (Highest-Lowest)
         </MenuItem>
       </Menu>
