@@ -4,6 +4,7 @@ import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { Link, useParams } from "react-router-dom";
 import JoyLink from "@mui/joy/Link";
 import Item from "./Item";
+import Divider from "@mui/material/Divider";
 // import Items from "./Items";
 const ItemList = ({ state, categories, dispatch }) => {
   const [value, setValue] = useState("All");
@@ -38,11 +39,11 @@ const ItemList = ({ state, categories, dispatch }) => {
           </TabList>
         </Box>
         <TabPanel value="All">
-          <Grid container spacing={2}>
+          <Grid container spacing={2} >
             {state.searchKey === "" ? (
               state.items.length > 0 ? (
                 state.items.map((item) => (
-                  <Grid item>
+                  <Grid item xs={2} >
                     <Item
                       state={state}
                       id={item.id}
@@ -61,7 +62,7 @@ const ItemList = ({ state, categories, dispatch }) => {
               )
             ) : state.searchResult.length ? (
               state.searchResult.map((item) => (
-                <Grid item>
+                <Grid item xs={2}>
                   <Item
                     state={state}
                     id={item.id}
@@ -82,6 +83,7 @@ const ItemList = ({ state, categories, dispatch }) => {
               </>
             )}
           </Grid>
+          <Divider/>
         </TabPanel>
         <TabPanel value={category}>
           <Grid container spacing={2}>
@@ -90,7 +92,7 @@ const ItemList = ({ state, categories, dispatch }) => {
                 state.items
                   .filter((item) => item.category === category)
                   .map((item) => (
-                    <Grid item>
+                    <Grid item xs={2}>
                       <Item
                         state={state}
                         id={item.id}
@@ -109,7 +111,7 @@ const ItemList = ({ state, categories, dispatch }) => {
               )
             ) : state.searchResult.length ? (
               state.searchResult.map((item) => (
-                <Grid item>
+                <Grid item xs={2}>
                   <Item
                     state={state}
                     id={item.id}
@@ -129,6 +131,7 @@ const ItemList = ({ state, categories, dispatch }) => {
               </>
             )}
           </Grid>
+           <Divider/>
         </TabPanel>
       </TabContext>
     </Paper>

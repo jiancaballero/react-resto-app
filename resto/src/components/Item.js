@@ -2,7 +2,18 @@ import React from "react";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 import ImageListItemBar from "@mui/material/ImageListItemBar";
-import { Paper, IconButton, Stack, Box, Button } from "@mui/material/";
+import CardMedia from "@mui/material/CardMedia";
+import CardContent from "@mui/material/CardContent";
+import CardActions from "@mui/material/CardActions";
+import {
+  Paper,
+  IconButton,
+  Stack,
+  Box,
+  Button,
+  Card,
+  Typography,
+} from "@mui/material/";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
@@ -22,18 +33,8 @@ const Item = ({
 }) => {
   // FIXME: does not stay on page  when item is on filtered
   return (
-    <Paper elevation={8} sx={{ borderRadius: "15px" ,position:"relative"}}>
-      <div className="ItemCardImage">
-        <img src={image} />
-      </div>
-      <div className="ItemCardBody">
-        <h5>{name}</h5>
-        <h5>
-          <i class="fa-solid fa-peso-sign" /> {price}
-        </h5>
-      </div>
-      <p>{description}</p>
-      <Box sx={{position:"absolute",top:"0",right:"0"}}>
+    <Card sx={{ position: "relative", flexWrap: "wrap" }} elevation={0}>
+      <Box sx={{ position: "absolute", top: "0", right: "0" }}>
         <EditItem
           dispatch={dispatch}
           id={id}
@@ -44,6 +45,7 @@ const Item = ({
           image={image}
         />
         <IconButton
+        
           aria-label="delete item"
           onClick={(e) => {
             {
@@ -57,34 +59,59 @@ const Item = ({
           <DeleteIcon />
         </IconButton>
       </Box>
-      <Stack direction="row" justifyContent="space-between">
-        <Box>
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            {quantity > 0 && (
+
+      <CardMedia
+        component="img"
+        height="140"
+        image={image}
+        alt={name}
+        sx={{ borderRadius: "15px" }}
+      />
+      <CardContent>
+        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+          <Typography gutterBottom variant="h6" component="div">
+            {name}
+          </Typography>
+          <Typography gutterBottom variant="h5" component="div">
+            <i class="fa-solid fa-peso-sign"></i>
+            {price}
+          </Typography>
+        </Box>
+        <Typography gutterBottom variant="body2" component="div">
+          {description}
+        </Typography>
+        <Stack direction="row" justifyContent="space-between" flexWrap="wrap">
+          <Box>
+            <Box
+              sx={{ display: "flex", alignItems: "center", padding: ".3em" }}
+            >
+              {quantity > 0 && (
+                <IconButton
+                  sx={{ padding: "none" }}
+                  aria-label="send"
+                  size="medium"
+                  onClick={() => {
+                    dispatch({
+                      type: "DECREASE_QUANTITY",
+                      payload: { id: id },
+                    });
+                  }}
+                >
+                  <RemoveCircleOutlineIcon fontSize="inherit" />
+                </IconButton>
+              )}
+              <h2>{quantity}</h2>
               <IconButton
                 aria-label="send"
-                size="large"
+                size="medium"
                 onClick={() => {
-                  dispatch({ type: "DECREASE_QUANTITY", payload: { id: id } });
+                  dispatch({ type: "INCREASE_QUANTITY", payload: { id: id } });
                 }}
               >
-                <RemoveCircleOutlineIcon fontSize="large" />
+                <AddCircleIcon fontSize="inherit" />
               </IconButton>
-            )}
-            <h2>{quantity}</h2>
-            <IconButton
-              aria-label="send"
-              size="large"
-              onClick={() => {
-                dispatch({ type: "INCREASE_QUANTITY", payload: { id: id } });
-              }}
-            >
-              <AddCircleIcon fontSize="large" />
-            </IconButton>
+            </Box>
           </Box>
-        </Box>
-
-        <button className="AddCartButton">
           <IconButton
             onClick={(e) => {
               dispatch({ type: "ORDER_ITEM", payload: { id: id } });
@@ -95,9 +122,9 @@ const Item = ({
           >
             <ShoppingCartIcon fontSize="large" />
           </IconButton>
-        </button>
-      </Stack>
-    </Paper>
+        </Stack>
+      </CardContent>
+    </Card>
   );
 };
 

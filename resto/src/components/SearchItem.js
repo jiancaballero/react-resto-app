@@ -12,26 +12,29 @@ import {
   Chip,
   Stack,
 } from "@mui/material";
+
+import MenuIcon from '@mui/icons-material/Menu';
+
+import InputBase from '@mui/material/InputBase';
 import TextField from "@mui/material/TextField";
-import SearchIcon from '@mui/icons-material/Search';
+import SearchIcon from "@mui/icons-material/Search";
 
 const SearchItem = ({ dispatch }) => {
   return (
     <TextField
-    icon={<SearchIcon/>}
+      icon={<SearchIcon />}
+      type="search"
       name="search"
-      ariaLable="Search Item"
+      ariaLabel="Search Item"
       autoFocus
       margin="dense"
       label="Search an item"
-      fullWidth
-      variant="outlined"
+     
       onChange={(e) => {
         dispatch({
           type: "SEARCH_ITEM",
-          payload: { input: e.target.value},
+          payload: { input: e.target.value },
         });
-        
       }}
     />
   );

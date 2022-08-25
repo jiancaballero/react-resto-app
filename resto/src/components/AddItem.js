@@ -121,7 +121,7 @@ const AddItem = ({ state, dispatch, id, categories }) => {
     <div>
       <Tooltip placement="left" title="Add Item">
         <Fab
-          sx={{ position: "absolute", bottom: 16, right: 16 }}
+          sx={{ position: "fixed", bottom: 16, right: 16 }}
           onClick={handleClickOpen}
         >
           <AddIcon />
