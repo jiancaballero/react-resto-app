@@ -19,7 +19,16 @@ import InputBase from '@mui/material/InputBase';
 import TextField from "@mui/material/TextField";
 import SearchIcon from "@mui/icons-material/Search";
 
-const SearchItem = ({ dispatch }) => {
+const SearchItem = ({ dispatch,searchKey }) => {
+  console.log(searchKey)
+  const handleOnChange = (e)=>{
+    
+    e.preventDefault();
+    dispatch({
+      type: "SEARCH_ITEM",
+      payload: { input: e.target.value },
+    });
+  }
   return (
     <TextField
       icon={<SearchIcon />}
@@ -29,13 +38,8 @@ const SearchItem = ({ dispatch }) => {
       autoFocus
       margin="dense"
       label="Search an item"
-     
-      onChange={(e) => {
-        dispatch({
-          type: "SEARCH_ITEM",
-          payload: { input: e.target.value },
-        });
-      }}
+     value={searchKey}
+      onChange={handleOnChange}
     />
   );
 };

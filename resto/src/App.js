@@ -27,6 +27,7 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
 import { styled, useTheme } from "@mui/material/styles";
 import SortItem from "./components/SortItem";
+import SuccessMessage from "./components/SuccessMessage";
 
 function App() {
   // CUSTOMED THEME
@@ -348,6 +349,7 @@ function App() {
     total: 0,
     cartCount: 0,
     searchKey: "",
+    category: "",
   };
 
   // const [cartCount, setCartCount] = useState(0);
@@ -367,16 +369,16 @@ function App() {
       }
 
       case "INCREASE_QUANTITY": {
+        const updateItems = state.items.map((item) => {
+          if (item.id === action.payload.id) {
+            item.quantity += 1;
+          }
+          return item;
+        });
+
         return {
           ...state,
-          items: [
-            ...state.items.map((item) => {
-              if (item.id === action.payload.id) {
-                item.quantity += 1;
-              }
-              return item;
-            }),
-          ],
+          items: updateItems,
         };
       }
 
@@ -543,8 +545,6 @@ function App() {
         return { ...state };
       }
       case "SEARCH_ITEM": {
-        state.searchKey = action.payload.input;
-
         const searchName = state.items.filter((item) => {
           return Object.values(item)
             .join("")
@@ -552,9 +552,14 @@ function App() {
             .includes(state.searchKey.toLowerCase());
         });
 
-        return { ...state, searchResult: searchName };
+        return {
+          ...state,
+          searchResult: searchName,
+          searchKey: action.payload.input,
+          category:"All"
+        };
       }
-      // FIXME: decimal values are not counted
+
       case "SORT_ITEMS": {
         const sort = action.payload.sortBy;
 
@@ -598,6 +603,9 @@ function App() {
             };
         }
       }
+      case "FILTER_ITEMS": {
+        return { ...state, category: action.payload.name, searchResult: [], searchKey:""};
+      }
 
       default: {
         return state;
@@ -607,7 +615,7 @@ function App() {
 
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  //TODO: PAEXPLAIN KAY MS KAYE LOGIC
+
   // FIXME: capitalization does not work in duplicates
   const categories = state.items
     .map((item) => item.category)
@@ -616,7 +624,7 @@ function App() {
         category.push(item);
       }
       return category;
-    }, []);
+    }, ['All']);
 
   return (
     <ThemeProvider theme={theme}>
@@ -646,7 +654,8 @@ function App() {
         {/* MAIN CONTENT */}
         <Main open={open}>
           <DrawerHeader />
-          {/* FIXME: klaging natatarget kada click ng button sa ibang feature */}
+
+        
           <Box
             sx={{
               display: "flex",
@@ -654,7 +663,7 @@ function App() {
               justifyContent: "space-between",
             }}
           >
-            <SearchItem dispatch={dispatch} />
+            <SearchItem dispatch={dispatch} searchKey={state.searchKey} />
             <SortItem dispatch={dispatch} />
 
             <AddItem
@@ -664,28 +673,12 @@ function App() {
               categories={categories}
             />
           </Box>
-          <Routes>
-            <Route
-              path=":category"
-              element={
-                <ItemList
-                  state={state}
-                  dispatch={dispatch}
-                  categories={categories}
-                />
-              }
-            />
-            <Route
-              path="/"
-              element={
-                <ItemList
-                  state={state}
-                  dispatch={dispatch}
-                  categories={categories}
-                />
-              }
-            />
-          </Routes>
+          <ItemList
+            state={state}
+            dispatch={dispatch}
+            categories={categories}
+            category={state.category}
+          />
         </Main>
 
         {/* SIDEBAR */}

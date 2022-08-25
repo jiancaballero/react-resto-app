@@ -1,13 +1,14 @@
+import React, { useState } from "react";
+import { Stack, Rating, Typography } from "@mui/material";
 
-import React, { useState }from 'react'
-import { Stack,Rating} from '@mui/material'
-
-const Ratings = ({ratings}) => {
+const Ratings = ({ ratings }) => {
   return (
-    <div>
-        <Rating value={ratings} precision={0.5} readOnly size='medium'></Rating>
-    </div>
-  )
-}
+    <Stack direction="row" spacing={2}>
 
-export default Ratings
+      <Rating value={ratings} precision={0.5} readOnly size="medium"></Rating>
+      <Typography variant="body2">{ratings}</Typography>
+    </Stack>
+  );
+};
+
+export default Ratings;
