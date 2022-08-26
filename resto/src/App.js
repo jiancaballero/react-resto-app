@@ -1,11 +1,11 @@
-import logo from "./logo.svg";
+
 import React from "react";
 import "./App.css";
 import Cart from "./components/Cart";
 import AddItem from "./components/AddItem";
 import { useReducer, useState, useEffect, startTransition } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { Stack, Paper, createTheme, ThemeProvider } from "@mui/material";
+import { Stack, Paper, createTheme, ThemeProvider,Button } from "@mui/material";
 import Box from "@mui/material/Box";
 import ItemList from "./components/ItemList";
 import { Route, Routes } from "react-router";
@@ -35,7 +35,7 @@ import SuccessOrderItem from "./components/SuccessOrderItem";
 import ErrorRemoveItem from "./components/ErrorRemoveItem";
 import ErrorRemoveCart from "./components/ErrorRemoveCart";
 import { extendSxProp } from "@mui/system";
-
+import restologo from './assets/images/restologo.png';
 function App() {
   // INITIAL STATE
   const initialState = {
@@ -265,6 +265,7 @@ function App() {
         description: "",
         image:
           "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnb77OSy-beAJX70F-R9gWUZtDWfxo6vMfNDIgCA9fNgn1Q3G--RoWoJ3WeXb9XvKuadA&usqp=CAU",
+        ratings: null,
       },
       {
         id: uuidv4(),
@@ -275,6 +276,7 @@ function App() {
         description: "",
         image:
           "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRGrMClBM2R8MEF0ecYSAo5OP1CYeq2scmWcQ&usqp=CAU",
+        ratings: null,
       },
 
       {
@@ -286,6 +288,7 @@ function App() {
         description: "",
         image:
           "https://www.kyotoboutique.fr/13742/japanese-sake-yamato-shizuku-junmai-ginjo.jpg",
+        ratings: null,
       },
     ],
     cart: [],
@@ -302,7 +305,18 @@ function App() {
   };
   // CUSTOMED THEME
   const theme = createTheme({
-    typography: { fontFamily: ["Raleway", "Arial"].join(",") },
+    typography: { fontFamily: ["Aboreto", "cursive"].join(",") },
+    palette: {
+      secondary: {
+        main: "#D3232B",
+      },
+      primary: {
+        main: "#E5E5E5",
+      },
+      text: {
+        main: "#242631",
+      },
+    },
   });
   // REACT UI STYLED COMPONENT DRAWER
   const drawerWidth = 380;
@@ -390,6 +404,9 @@ function App() {
           successOrder: false,
           successAdd: false,
           errorRemoveCart: false,
+          searchResult: state.searchResult.filter(
+            (item) => item.id !== action.payload.id
+          ),
         };
       }
 
@@ -456,6 +473,14 @@ function App() {
           }
         } else {
           alert("Please add a quantity");
+          return {
+            ...state,
+            successOrder: false,
+            errorRemove: false,
+            successEdit: false,
+            successAdd: false,
+            errorRemoveCart: false,
+          };
         }
         return {
           ...state,
@@ -616,7 +641,7 @@ function App() {
           errorRemoveCart: false,
         };
       }
-
+   
       case "SORT_ITEMS": {
         const sort = action.payload.sortBy;
 
@@ -738,15 +763,21 @@ function App() {
       <Box sx={{ display: "flex" }}>
         <CssBaseline />
         {/* HEADER */}
-        <AppBar position="fixed" open={open}>
+        <AppBar
+          position="fixed"
+          open={open}
+          elevation={0}
+          sx={{ backgroundColor: "secondary.dark" }}
+        >
           <Toolbar>
+            <img src={restologo} className="RestoLogo"></img>
             <Typography
               variant="h6"
               noWrap
               sx={{ flexGrow: 1 }}
               component="div"
             >
-              Resto App
+              UCHIHA
             </Typography>
             <IconButton
               aria-label="open drawer"
@@ -759,8 +790,10 @@ function App() {
           </Toolbar>
         </AppBar>
         {/* MAIN CONTENT */}
-        <Main open={open}>
+        <Main open={open} className="Main">
           <DrawerHeader />
+          {/* FIXME: notif appears when clicking a button */}
+          {/* FIXME: notif appears when nothing is added to cart */}
           <SuccessAddItem success={state.successAdd} />
           <SuccessEditItem success={state.successEdit} />
           <SuccessOrderItem success={state.successOrder} />
@@ -770,8 +803,9 @@ function App() {
           <Box
             sx={{
               display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
+              alignItems: "flex-end",
+              gap:'10px',
+              
             }}
           >
             <SearchItem dispatch={dispatch} searchKey={state.searchKey} />
@@ -794,11 +828,13 @@ function App() {
 
         {/* SIDEBAR */}
         <Drawer
+          
           sx={{
             width: drawerWidth,
 
             flexShrink: 0,
             "& .MuiDrawer-paper": {
+              backgroundImage:"url(./assets/images/swirl_pattern.png)",
               width: drawerWidth,
               padding: "1.25em",
             },
@@ -820,7 +856,7 @@ function App() {
           <Divider />
           {state.cart.length > 0 && (
             <>
-              <Paper elevation={1} sx={{ padding: "1em", marginBottom: "2em" }}>
+              <Paper elevation={1} sx={{ padding: "1em", marginBottom: "2em" }} >
                 <CartList state={state} dispatch={dispatch} />
               </Paper>
               <Divider />
@@ -832,8 +868,8 @@ function App() {
               </Paper>
               <Divider />
               <Paper elevation={0} sx={{ padding: "1em", marginTop: "auto" }}>
-                <h1>Total Amount:{state.total}</h1>
-                <button>Checkout</button>
+                <Typography variant="h5">Total Amount: {state.total}.00</Typography>
+                <Button variant="contained" disableElevation color="secondary" size="large">Checkout</Button>
               </Paper>
             </>
           )}

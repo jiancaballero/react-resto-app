@@ -73,20 +73,19 @@ const EditItem = ({
   return (
     <div>
       <IconButton
+        sx={{ background: "white" }}
         aria-label="update item"
+        size="small"
         onClick={() => {
           handleClickOpen();
         }}
       >
-        <EditIcon />
+        <EditIcon fontSize="small" />
       </IconButton>
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Edit Item</DialogTitle>
+        <DialogTitle>Edit Item Information</DialogTitle>
         <DialogContent>
-          <DialogContentText gutterBottom>
-            Please fill out all forms. Make sure the item name has no
-            duplicates.
-          </DialogContentText>
+          
 
           <Box sx={{ marginBottom: "1em" }}>
             <TextField
@@ -183,9 +182,11 @@ const EditItem = ({
           </Box> */}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={handleClose} sx={{color:"black"}}>Cancel</Button>
           <Button
+           sx={{color:"black"}}
             onClick={() => {
+             
               handleClose();
               dispatch({
                 type: "EDIT_ITEM",
@@ -198,9 +199,8 @@ const EditItem = ({
                   description: edit.description,
                 },
               });
-              dispatch({ type: "TOTAL_AMOUNT"});
-              dispatch({ type: "COUNT_CART"});
-              
+              dispatch({ type: "TOTAL_AMOUNT" });
+              dispatch({ type: "COUNT_CART" });
             }}
           >
             Submit

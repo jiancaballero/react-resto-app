@@ -17,7 +17,7 @@ const ErrorRemoveCart = ({ error }) => {
   return (
     <Snackbar
       open={open}
-      autoHideDuration={2000}
+      autoHideDuration={5000}
       onClose={handleCloseErrorAlert}
       anchorOrigin={{ vertical: "top", horizontal: "right" }}
     >
@@ -26,7 +26,7 @@ const ErrorRemoveCart = ({ error }) => {
         severity="error"
         sx={{ width: "100%" }}
       >
-        Remove Item From Cart Successfully
+        Item Removed From Cart
       </Alert>
     </Snackbar>
   );

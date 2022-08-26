@@ -20,6 +20,7 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditItem from "./EditItem";
 import Ratings from "./Ratings";
+import { bgcolor } from "@mui/system";
 const Item = ({
   id,
   name,
@@ -33,10 +34,18 @@ const Item = ({
   deleteItem,
   category,
 }) => {
- 
   return (
-    <Card sx={{ position: "relative", flexWrap: "wrap" }} elevation={0}>
-      <Box sx={{ position: "absolute", top: "0", right: "0" }}>
+    <Card sx={{ position: "relative", height: "100%", display:"flex", flexDirection:"column" }} elevation={0}>
+      <Box
+        sx={{
+          position: "absolute",
+          top: "5px",
+          left: "5px",
+          display: "flex",
+          flexDirection: "column",
+          gap: "5px",
+        }}
+      >
         <EditItem
           dispatch={dispatch}
           id={id}
@@ -45,10 +54,10 @@ const Item = ({
           category={category}
           description={description}
           image={image}
-         
         />
         <IconButton
-        
+          sx={{ background: "white" }}
+          size="small"
           aria-label="delete item"
           onClick={(e) => {
             {
@@ -59,7 +68,7 @@ const Item = ({
             }
           }}
         >
-          <DeleteIcon />
+          <DeleteIcon fontSize="small" />
         </IconButton>
       </Box>
 
@@ -72,22 +81,49 @@ const Item = ({
       />
       <CardContent>
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-          <Typography gutterBottom variant="h6" component="div">
+          <Typography
+            gutterBottom
+            variant="h6"
+            component="div"
+            color="text.main"
+          >
             {name}
           </Typography>
-          <Typography gutterBottom variant="h5" component="div">
-            <i class="fa-solid fa-peso-sign"></i>
+          <Typography
+            gutterBottom
+            variant="h5"
+            component="div"
+            color="text.main"
+          >
             {price}
           </Typography>
         </Box>
-        <Ratings ratings={ratings}/>
-        <Typography gutterBottom variant="body2" component="div">
-          {description}
-        </Typography>
+
+        {ratings != null && (
+          <>
+            <Ratings ratings={ratings} />
+            <Typography
+              gutterBottom
+              variant="body2"
+              component="div"
+              color="text.main"
+            >
+              {description}
+            </Typography>
+          </>
+        )}
+      </CardContent>
+      <CardActions sx={{marginTop:"auto"}}>
         <Stack direction="row" justifyContent="space-between" flexWrap="wrap">
           <Box>
             <Box
-              sx={{ display: "flex", alignItems: "center", padding: ".3em" }}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                padding: ".3em",
+                borderRadius: "30px",
+              }}
+              bgcolor="secondary.light"
             >
               {quantity > 0 && (
                 <IconButton
@@ -104,7 +140,9 @@ const Item = ({
                   <RemoveCircleOutlineIcon fontSize="inherit" />
                 </IconButton>
               )}
-              <h2>{quantity}</h2>
+              <Typography variant="h6" color="text.main">
+                {quantity}
+              </Typography>
               <IconButton
                 aria-label="send"
                 size="medium"
@@ -124,10 +162,10 @@ const Item = ({
               dispatch({ type: "RESET_QUANTITY", payload: { id: id } });
             }}
           >
-            <ShoppingCartIcon fontSize="large" />
+            <ShoppingCartIcon fontSize="large" color="text" />
           </IconButton>
         </Stack>
-      </CardContent>
+      </CardActions>
     </Card>
   );
 };

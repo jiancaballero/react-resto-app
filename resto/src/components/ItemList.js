@@ -23,12 +23,15 @@ const ItemList = ({ state, categories, dispatch, category }) => {
             onChange={handleChange}
             variant="scrollable"
             scrollButtons="auto"
+            textColor="secondary"
+            indicatorColor="secondary"
           >
             {/* {category==="" ? <Tab label="All" value=""></Tab>:} */}
             {/* <Tab label={category} value={category}/> */}
 
             {categories.map((category) => (
               <Tab
+               
                 label={category}
                 value={category}
                 onClick={() =>
@@ -45,11 +48,11 @@ const ItemList = ({ state, categories, dispatch, category }) => {
           </TabList>
         </Box>
 
-        <TabPanel value={category}>
+        <TabPanel value={category} className="TabPanel">
           <Grid container spacing={2}>
             {state.searchResult.length ? (
               state.searchResult.map((item) => (
-                <Grid item xs={2}>
+                <Grid item xs={2} >
                   <Item
                     state={state}
                     id={item.id}
@@ -65,7 +68,7 @@ const ItemList = ({ state, categories, dispatch, category }) => {
                 </Grid>
               ))
             ) : (
-              <>{state.searchKey && <h1>No Result Found. </h1>}</>
+              <>{state.searchKey && <h1>No Result Found </h1>}</>
             )}
             {!state.searchKey &&
               state.items.map(

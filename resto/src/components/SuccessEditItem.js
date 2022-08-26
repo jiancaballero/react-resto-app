@@ -17,7 +17,7 @@ const SuccessEditItem = ({ success }) => {
   return (
     <Snackbar
       open={open}
-      autoHideDuration={2000}
+      autoHideDuration={5000}
       onClose={handleCloseSuccessAlert}
       anchorOrigin={{ vertical: "top", horizontal: "right" }}
     >

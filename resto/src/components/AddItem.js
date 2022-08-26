@@ -157,10 +157,11 @@ const AddItem = ({ state, dispatch, id, categories }) => {
       
       <Tooltip placement="left" title="Add Item">
         <Fab
-          sx={{ position: "fixed", bottom: 16, right: 16 }}
+          sx={{ position: "fixed", bottom: 16, right: 16, }}
           onClick={handleClickOpen}
+          color='text'
         >
-          <AddIcon />
+          <AddIcon color='primary' />
         </Fab>
       </Tooltip>
       <Dialog open={open} onClose={handleClose}>
@@ -177,7 +178,7 @@ const AddItem = ({ state, dispatch, id, categories }) => {
             <FormControlLabel
               label="New"
               control={
-                <Checkbox checked={isNew} onChange={handleInput} name="isNew" />
+                <Checkbox checked={isNew} onChange={handleInput} name="isNew" color="secondary" />
               }
             />
           </Box>
@@ -281,7 +282,7 @@ const AddItem = ({ state, dispatch, id, categories }) => {
               multiline
               maxRows={9}
               fullWidth
-              variant="filled"
+              variant="standard"
               margin="dense"
             />
           </Box>
@@ -306,8 +307,8 @@ const AddItem = ({ state, dispatch, id, categories }) => {
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button
+          <Button onClick={handleClose} sx={{color:"black"}}>Cancel</Button>
+          <Button sx={{color:"black"}}
             onClick={() => {
               addNewItem();
             }}

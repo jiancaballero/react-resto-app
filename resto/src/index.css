@@ -8,4 +8,23 @@ body {
   font-family: "Poppins", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  
 }
+body::before{
+
+  height: 100vh;
+  display: inline-block;
+  content: "";
+  mix-blend-mode: screen;
+  opacity: 0.1;
+  background:url(./assets/images/swirl_pattern.png); 
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+
+
+

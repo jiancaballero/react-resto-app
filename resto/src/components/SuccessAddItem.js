@@ -17,7 +17,7 @@ const SuccessAddItem = ({ success }) => {
   return (
     <Snackbar
       open={open}
-      autoHideDuration={2000}
+      autoHideDuration={5000}
       onClose={handleCloseSuccessAlert}
       anchorOrigin={{ vertical: "top", horizontal: "right" }}
     >
@@ -26,7 +26,7 @@ const SuccessAddItem = ({ success }) => {
         severity="success"
         sx={{ width: "100%" }}
       >
-        Added Item Successfully
+        Added New Item Successfully 
       </Alert>
     </Snackbar>
   );
