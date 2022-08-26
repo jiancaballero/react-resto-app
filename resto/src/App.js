@@ -789,6 +789,9 @@ function App() {
             >
               UCHIHA
             </Typography>
+            
+          <Box sx={{display:"flex", gap:"8px", alignItems:"center"}}>
+           
             <IconButton
               aria-label="open drawer"
              
@@ -797,6 +800,10 @@ function App() {
             >
               <CartNotif cartCount={state.cartCount} />
             </IconButton>
+            <Typography>
+               Cart
+            </Typography>
+          </Box>
           </Toolbar>
         </AppBar>
         {/* MAIN CONTENT */}
