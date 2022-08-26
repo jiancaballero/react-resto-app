@@ -161,25 +161,6 @@ const EditItem = ({
               margin="dense"
             />
           </Box>
-          {/* <Box sx={{ marginBottom: "1em" }}>
-            <TextField
-              onKeyPress={handleKeyPress}
-              name="tag"
-              label="Tags (optional)"
-              fullWidth
-              variant="outlined"
-              margin="dense"
-            />
-            <Stack direction="row" spacing={1} sx={{ flexWrap: "wrap" }}>
-              {tags.map((tag) => (
-                <Chip
-                  key={tag}
-                  label={tag}
-                  onDelete={() => handleDeleteTag(tag)}
-                ></Chip>
-              ))}
-            </Stack>
-          </Box> */}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} sx={{color:"black"}}>Cancel</Button>

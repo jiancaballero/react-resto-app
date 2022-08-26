@@ -369,16 +369,7 @@ function App() {
 
   const [open, setOpen] = React.useState(false);
 
-  const handleDrawerOpen = (e) => {
-    e.preventDefault();
-    setOpen(true);
-  };
-
-  const handleDrawerClose = (e) => {
-    e.preventDefault();
-    setOpen(false);
-  };
-
+ 
   // SET UP REDUCER CASES
   const reducer = (state, action) => {
     switch (action.type) {
@@ -539,10 +530,7 @@ function App() {
                 if (item.quantity > 0) {
                   item.quantity -= 1;
                 }
-                // if (item.quantity <= 0) {
-                //   debugger
-                //   return state.cart.splice(index, 1);
-                // }
+       
               }
               return item;
             }),
@@ -737,6 +725,17 @@ function App() {
         };
       }
 
+      case "RESET_ALERTS":{
+        return {
+          ...state,
+          errorRemove: false,
+          successEdit: false,
+          successOrder: false,
+          successAdd: false,
+          errorRemoveCart: false,
+        };
+      }
+
       default: {
         return state;
       }
@@ -744,6 +743,17 @@ function App() {
   };
 
   const [state, dispatch] = useReducer(reducer, initialState);
+  const handleDrawerOpen = (e) => {
+    e.preventDefault();
+    dispatch({type:"RESET_ALERTS"})
+    setOpen(true);
+  };
+
+  const handleDrawerClose = (e) => {
+    e.preventDefault();
+    dispatch({type:"RESET_ALERTS"})
+    setOpen(false);
+  };
 
   // FIXME: capitalization does not work in duplicates
   const categories = state.items
@@ -781,7 +791,7 @@ function App() {
             </Typography>
             <IconButton
               aria-label="open drawer"
-              // edge="end"
+             
               onClick={handleDrawerOpen}
               sx={{ ...(open && { display: "none" }) }}
             >
@@ -792,8 +802,6 @@ function App() {
         {/* MAIN CONTENT */}
         <Main open={open} className="Main">
           <DrawerHeader />
-          {/* FIXME: notif appears when clicking a button */}
-          {/* FIXME: notif appears when nothing is added to cart */}
           <SuccessAddItem success={state.successAdd} />
           <SuccessEditItem success={state.successEdit} />
           <SuccessOrderItem success={state.successOrder} />
@@ -861,22 +869,22 @@ function App() {
               </Paper>
               <Divider />
               <Paper elevation={0} sx={{ padding: "1em", marginBottom: "2em" }}>
-                <Stack direction="row" spacing={4}>
-                  <h3>PROMO CODE:</h3>
-                  <button>Add Coupon</button>
+                <Stack direction="row" spacing={4} alignItems="flex-end" >
+                  <Typography variant="subTitle1">FIND PROMOTION</Typography>
+                  <Button variant="outlined" color="secondary">Add Coupon</Button>
                 </Stack>
               </Paper>
               <Divider />
               <Paper elevation={0} sx={{ padding: "1em", marginTop: "auto" }}>
-                <Typography variant="h5">Total Amount: {state.total}.00</Typography>
-                <Button variant="contained" disableElevation color="secondary" size="large">Checkout</Button>
+                <Typography variant="h5" gutterBottom>Total Amount: {state.total}.00</Typography>
+                <Button sx={{width:"100%"}} variant="contained" disableElevation color="secondary" size="large">Checkout</Button>
               </Paper>
             </>
           )}
           {!state.cart.length > 0 && (
-            <>
+            <Box sx={{margin:"auto"}}>
               <EmptyCart />
-            </>
+            </Box>
           )}
         </Drawer>
       </Box>

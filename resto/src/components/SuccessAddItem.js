@@ -19,7 +19,7 @@ const SuccessAddItem = ({ success }) => {
       open={open}
       autoHideDuration={5000}
       onClose={handleCloseSuccessAlert}
-      anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      anchorOrigin={{ vertical: "top", horizontal: "left" }}
     >
       <Alert
         onClose={handleCloseSuccessAlert}

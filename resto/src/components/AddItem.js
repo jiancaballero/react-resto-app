@@ -95,7 +95,6 @@ const AddItem = ({ state, dispatch, id, categories }) => {
           showNewCategoryInput(false);
           setItem({ ...item, category: e.target.value });
         }
-        // setItem({ ...item, category: e.target.value });
         break;
       case "price":
         setItem({ ...item, price: e.target.value });
@@ -107,7 +106,7 @@ const AddItem = ({ state, dispatch, id, categories }) => {
         setItem({ ...item, image: e.target.value });
     }
   };
- 
+
   const duplicate = state.items
     .map((items) => items)
     .filter(
@@ -140,28 +139,21 @@ const AddItem = ({ state, dispatch, id, categories }) => {
       item.image !== "" &&
       !duplicate.length
     ) {
-      
-      dispatch({ type: "ADD_ITEM", payload: item} );
-     
+      dispatch({ type: "ADD_ITEM", payload: item });
+
       handleClose();
-    
     }
   };
 
-  // MESSAGES
- 
- 
-
   return (
     <div>
-      
       <Tooltip placement="left" title="Add Item">
         <Fab
-          sx={{ position: "fixed", bottom: 16, right: 16, }}
+          sx={{ position: "fixed", bottom: 16, right: 16 }}
           onClick={handleClickOpen}
-          color='text'
+          color="text"
         >
-          <AddIcon color='primary' />
+          <AddIcon color="primary" />
         </Fab>
       </Tooltip>
       <Dialog open={open} onClose={handleClose}>
@@ -173,12 +165,16 @@ const AddItem = ({ state, dispatch, id, categories }) => {
             duplicates.
           </DialogContentText>
 
-          {/* CHECKBOX */}
           <Box sx={{ margin: "1em 0" }}>
             <FormControlLabel
               label="New"
               control={
-                <Checkbox checked={isNew} onChange={handleInput} name="isNew" color="secondary" />
+                <Checkbox
+                  checked={isNew}
+                  onChange={handleInput}
+                  name="isNew"
+                  color="secondary"
+                />
               }
             />
           </Box>
@@ -307,8 +303,11 @@ const AddItem = ({ state, dispatch, id, categories }) => {
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} sx={{color:"black"}}>Cancel</Button>
-          <Button sx={{color:"black"}}
+          <Button onClick={handleClose} sx={{ color: "black" }}>
+            Cancel
+          </Button>
+          <Button
+            sx={{ color: "black" }}
             onClick={() => {
               addNewItem();
             }}

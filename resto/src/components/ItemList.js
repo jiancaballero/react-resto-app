@@ -5,9 +5,8 @@ import { Link, useParams } from "react-router-dom";
 import JoyLink from "@mui/joy/Link";
 import Item from "./Item";
 import Divider from "@mui/material/Divider";
-// import Items from "./Items";
 const ItemList = ({ state, categories, dispatch, category }) => {
-  console.log(category);
+
   const [value, setValue] = useState(category);
 
   const handleChange = (e, newValue) => {
@@ -26,9 +25,7 @@ const ItemList = ({ state, categories, dispatch, category }) => {
             textColor="secondary"
             indicatorColor="secondary"
           >
-            {/* {category==="" ? <Tab label="All" value=""></Tab>:} */}
-            {/* <Tab label={category} value={category}/> */}
-
+        
             {categories.map((category) => (
               <Tab
                
@@ -40,9 +37,7 @@ const ItemList = ({ state, categories, dispatch, category }) => {
                     payload: { name: category },
                   })
                 }
-                // to={`/${category}`}
-
-                // component={Link}
+             
               />
             ))}
           </TabList>
