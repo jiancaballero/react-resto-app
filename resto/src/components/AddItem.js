@@ -161,7 +161,7 @@ const AddItem = ({ state, dispatch, id, categories }) => {
         <Divider />
         <DialogContent>
           <DialogContentText gutterBottom>
-            Please fill out all forms. Make sure the item name has no
+            Please fill out all required fields. Make sure the item name has no
             duplicates.
           </DialogContentText>
 
