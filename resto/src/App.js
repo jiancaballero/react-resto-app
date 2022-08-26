@@ -876,7 +876,7 @@ function App() {
               </Paper>
               <Divider />
               <Paper elevation={0} sx={{ padding: "1em", marginTop: "auto" }}>
-              <Typography sx={{display:"flex", justifyContent: "space-between"}} variant="h5" gutterBottom>Total Amount <Stack>{state.total}.00</Stack></Typography>
+              <Typography sx={{display:"flex", justifyContent: "space-between" ,gap:"10px"}} variant="h5" gutterBottom>Total Amount <Stack>{state.total}.00</Stack></Typography>
                 <Button sx={{width:"100%"}} variant="contained" disableElevation color="secondary" size="large">Checkout</Button>
               </Paper>
             </>
