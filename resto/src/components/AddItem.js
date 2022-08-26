@@ -88,6 +88,7 @@ const AddItem = ({ state, dispatch, id, categories }) => {
       case "name":
         setItem({ ...item, name: e.target.value });
         break;
+        // FIXME: new category input error
       case "category":
         if (e.target.value === "addCategory") {
           showNewCategoryInput(true);

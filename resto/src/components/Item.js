@@ -16,7 +16,7 @@ import {
 } from "@mui/material/";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditItem from "./EditItem";
 import Ratings from "./Ratings";
@@ -162,7 +162,7 @@ const Item = ({
               dispatch({ type: "RESET_QUANTITY", payload: { id: id } });
             }}
           >
-            <ShoppingCartIcon fontSize="large" color="text" />
+            <AddShoppingCartIcon fontSize="large" color="text" />
           </IconButton>
         </Stack>
       </CardActions>
