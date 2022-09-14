@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
+import axios from "axios";
 import {
   Fab,
   MenuItem,
@@ -88,7 +89,6 @@ const AddItem = ({ state, dispatch, id, categories }) => {
       case "name":
         setItem({ ...item, name: e.target.value });
         break;
-        // FIXME: new category input error
       case "category":
         if (e.target.value === "addCategory") {
           showNewCategoryInput(true);
@@ -140,8 +140,9 @@ const AddItem = ({ state, dispatch, id, categories }) => {
       item.image !== "" &&
       !duplicate.length
     ) {
-      dispatch({ type: "ADD_ITEM", payload: item });
-
+      axios.post("http://localhost:8080/api/items", item).then((res) => {
+        dispatch({ type: "ADD_ITEM", payload: item });
+      });
       handleClose();
     }
   };
@@ -162,7 +163,7 @@ const AddItem = ({ state, dispatch, id, categories }) => {
         <Divider />
         <DialogContent>
           <DialogContentText gutterBottom>
-            Please fill out all required fields. Make sure the item name has no
+            Please fill out all forms. Make sure the item name has no
             duplicates.
           </DialogContentText>
 

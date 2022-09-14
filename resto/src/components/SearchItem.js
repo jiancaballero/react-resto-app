@@ -18,11 +18,26 @@ import MenuIcon from "@mui/icons-material/Menu";
 import InputBase from "@mui/material/InputBase";
 import TextField from "@mui/material/TextField";
 import SearchIcon from "@mui/icons-material/Search";
-
+import axios from "axios";
+import { useEffect } from "react";
 const SearchItem = ({ dispatch, searchKey }) => {
- 
+  // useEffect(()=>{
+  //   axios
+  //   .get("http://localhost:8080/api/items/search", {
+  //     search: searchKey
+  //   })
+  //   .then((res) => {
+  //     console.log(res);
+  //     dispatch({
+  //       type: "SEARCH_RESULT",
+  //       payload: {  searchResult:res },
+  //     });
+      
+  //   });
+  // },[searchKey])
   const handleOnChange = (e) => {
     e.preventDefault();
+
     dispatch({
       type: "SEARCH_ITEM",
       payload: { input: e.target.value },
@@ -48,6 +63,7 @@ const SearchItem = ({ dispatch, searchKey }) => {
       label="Search an item"
       value={searchKey}
       onChange={handleOnChange}
+      autoComplete="off"
       InputProps={{
         startAdornment: (
           <InputAdornment position="start">

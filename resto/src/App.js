@@ -1,11 +1,16 @@
-
 import React from "react";
 import "./App.css";
 import Cart from "./components/Cart";
 import AddItem from "./components/AddItem";
 import { useReducer, useState, useEffect, startTransition } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { Stack, Paper, createTheme, ThemeProvider,Button } from "@mui/material";
+import {
+  Stack,
+  Paper,
+  createTheme,
+  ThemeProvider,
+  Button,
+} from "@mui/material";
 import Box from "@mui/material/Box";
 import ItemList from "./components/ItemList";
 import { Route, Routes } from "react-router";
@@ -35,266 +40,16 @@ import SuccessOrderItem from "./components/SuccessOrderItem";
 import ErrorRemoveItem from "./components/ErrorRemoveItem";
 import ErrorRemoveCart from "./components/ErrorRemoveCart";
 import { extendSxProp } from "@mui/system";
-import restologo from './assets/images/restologo.png';
+import restologo from "./assets/images/restologo.png";
+import axios from "axios";
 function App() {
   // INITIAL STATE
   const initialState = {
-    items: [
-      {
-        id: uuidv4(),
-        name: "Karaage Bento",
-        category: "bento",
-        price: 120,
-        quantity: 0,
-        description: "",
-        image:
-          "https://s3-ap-northeast-1.amazonaws.com/tdjcom/goods/main_pic122_1_1544852299.jpg",
-        ratings: 4,
-      },
-      {
-        id: uuidv4(),
-        name: "Ebi Fry",
-        category: "bento",
-        price: 250,
-        quantity: 0,
-        description: "",
-        image:
-          "https://bentoya.ae/wp-content/uploads/2021/05/EBI-TEMPURA-BENTO_s.jpg",
-        ratings: 3,
-      },
-      {
-        id: uuidv4(),
-        name: "Teriyaki Chicken",
-        category: "bento",
-        price: 250,
-        quantity: 0,
-        description: "",
-        image:
-          "https://moonsushi.co.nz/wp-content/uploads/2022/03/Teriyaki-Salmon-28-1.jpg",
-        ratings: 3,
-      },
-
-      {
-        id: uuidv4(),
-        name: "Beef Teriyaki",
-        category: "bento",
-        price: 350,
-        quantity: 0,
-        description: "",
-        image:
-          "https://media-cdn.tripadvisor.com/media/photo-s/18/8a/ff/69/beef-teriyaki-bento-box.jpg",
-        ratings: 3.5,
-      },
-      {
-        id: uuidv4(),
-        name: "Grilled Salmon",
-        category: "bento",
-        price: 350,
-        quantity: 0,
-        description: "",
-        image: "https://image.entabe.jp/upload/20210714/images/sub3.jpg",
-        ratings: 2.5,
-      },
-      {
-        id: uuidv4(),
-        name: "Saba no Miso",
-        category: "bento",
-        price: 380,
-        quantity: 0,
-        description: "",
-        image: "https://image.entabe.jp/upload/20210115/images/sub2_3.jpg",
-        ratings: 3,
-      },
-
-      {
-        id: uuidv4(),
-        name: "Katsu Curry",
-        category: "katsu",
-        price: 380,
-        quantity: 0,
-        description: "",
-        image:
-          "https://sudachirecipes.com/wp-content/uploads/2021/06/chicken-katsu-curry-7-1536x1024.jpg",
-        ratings: 5,
-      },
-      {
-        id: uuidv4(),
-        name: "Pork Tonkatsu",
-        category: "katsu",
-        price: 380,
-        quantity: 0,
-        description: "",
-        image:
-          "https://salu-salo.com/wp-content/uploads/2016/02/Tonkatsu-Japanese-Pork-Cutlets-3.jpg",
-        ratings: 5,
-      },
-      {
-        id: uuidv4(),
-        name: "Cheese Katsu",
-        category: "katsu",
-        price: 400,
-        quantity: 0,
-        description: "",
-        image:
-          "https://i1.wp.com/seonkyounglongest.com/wp-content/uploads/2020/10/Cheese-Tonkatsu-10-mini.jpg?fit=1000%2C667&ssl=1",
-        ratings: 5,
-      },
-      {
-        id: uuidv4(),
-        name: "Gyu Katsu",
-        category: "katsu",
-        price: 450,
-        quantity: 0,
-        description: "",
-        image:
-          "https://gurunavi.com/en/japanfoodie/article/katsu/img/04_Katsu.jpg",
-        ratings: 4.5,
-      },
-
-      {
-        id: uuidv4(),
-        name: "Spicy Shoyu",
-        category: "ramen",
-        price: 400,
-        quantity: 0,
-        description: "",
-        image:
-          "https://pickledplum.com/wp-content/uploads/2018/02/shoyu-ramen-1-1200.jpg",
-        ratings: 3,
-      },
-      {
-        id: uuidv4(),
-        name: "Tonkatsu Ramen",
-        category: "ramen",
-        price: 450,
-        quantity: 0,
-        description: "",
-        image:
-          "http://cdn.shopify.com/s/files/1/0111/1729/7722/articles/shutterstock_697241275_tonkotsu_ramen-landscape.jpg?v=1562316760",
-        ratings: 4.5,
-      },
-      {
-        id: uuidv4(),
-        name: "Miso Ramen",
-        category: "ramen",
-        price: 450,
-        quantity: 0,
-        description: "",
-        image:
-          "https://i.guim.co.uk/img/media/4f9c291b0a24383c031840ae85f4cddb393f99a6/0_323_3648_2189/master/3648.jpg?width=1200&height=1200&quality=85&auto=format&fit=crop&s=72c84cc785c64e75861ee2da1f3c4a7c",
-        ratings: 4,
-      },
-
-      {
-        id: uuidv4(),
-        name: "Salad",
-        category: "side",
-        price: 140,
-        quantity: 0,
-        description: "",
-        image:
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTVxw1PRAujhKXs6r3Zd1vkSF7tGdCGM0b-PA&usqp=CAU",
-        ratings: 3,
-      },
-      {
-        id: uuidv4(),
-        name: "Potato Korokke",
-        category: "side",
-        price: 160,
-        quantity: 0,
-        description: "",
-        image:
-          "https://www.thespruceeats.com/thmb/5l0NBRobJl8DPu5CisaX0fwymT4=/3000x2000/filters:fill(auto,1)/potato-korokke-2031283-hero-01-5edf6479ce8446a29f36769d2022728a.jpg",
-        ratings: 4,
-      },
-      {
-        id: uuidv4(),
-        name: "Shrimp Tempura",
-        category: "side",
-        price: 160,
-        quantity: 0,
-        description: "",
-        image:
-          "https://i.pinimg.com/736x/59/73/d2/5973d2dab2c1199df04af66c18fadabb--shrimp-dishes-shrimp-pasta.jpg",
-        ratings: 4,
-      },
-
-      {
-        id: uuidv4(),
-        name: "Gyoza",
-        category: "side",
-        price: 180,
-        quantity: 0,
-        description: "",
-        image:
-          "https://mychefrecipe.com/wp-content/uploads/2021/01/Gyozas-presentation-04-650.jpg",
-        ratings: 4,
-      },
-
-      // DESSERT
-      {
-        id: uuidv4(),
-        name: "Tiramisu",
-        category: "dessert",
-        price: 80,
-        quantity: 0,
-        description: "",
-        image:
-          "https://www.lifeloveandsugar.com/wp-content/uploads/2017/01/Mini-Tiramisu-Trifles2-2.jpg",
-        ratings: 3.5,
-      },
-      {
-        id: uuidv4(),
-        name: "Matcha Ice Cream",
-        category: "dessert",
-        price: 100,
-        quantity: 0,
-        description: "",
-        image:
-          "https://www.wandercooks.com/wp-content/uploads/2022/03/matcha-green-tea-ice-cream-3-683x1024.jpg",
-        ratings: 3,
-      },
-
-      // DRINKS
-      {
-        id: uuidv4(),
-        name: "Ocha",
-        category: "drinks",
-        price: 40,
-        quantity: 0,
-        description: "",
-        image:
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnb77OSy-beAJX70F-R9gWUZtDWfxo6vMfNDIgCA9fNgn1Q3G--RoWoJ3WeXb9XvKuadA&usqp=CAU",
-        ratings: null,
-      },
-      {
-        id: uuidv4(),
-        name: "Lemon Tea",
-        category: "drinks",
-        price: 80,
-        quantity: 0,
-        description: "",
-        image:
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRGrMClBM2R8MEF0ecYSAo5OP1CYeq2scmWcQ&usqp=CAU",
-        ratings: null,
-      },
-
-      {
-        id: uuidv4(),
-        name: "Sake",
-        category: "drinks",
-        price: 90,
-        quantity: 0,
-        description: "",
-        image:
-          "https://www.kyotoboutique.fr/13742/japanese-sake-yamato-shizuku-junmai-ginjo.jpg",
-        ratings: null,
-      },
-    ],
+    items: [],
     cart: [],
     searchResult: [],
-    total: 0,
-    cartCount: 0,
+    total: null,
+    cartCount: null,
     searchKey: "",
     category: "",
     successAdd: false,
@@ -369,10 +124,35 @@ function App() {
 
   const [open, setOpen] = React.useState(false);
 
- 
   // SET UP REDUCER CASES
   const reducer = (state, action) => {
     switch (action.type) {
+      case "DISPLAY_ITEMS": {
+        return {
+          ...state,
+          items: action.payload.items,
+        };
+      }
+      case "DISPLAY_CART": {
+        if (action.payload.cart.length > 0) {
+          return {
+            ...state,
+            cart: action.payload.cart,
+            total: action.payload.cart.reduce((prev, curr) => {
+              return prev + curr.price * curr.quantity;
+            }, 0),
+            cartCount: action.payload.cart.reduce((prev, curr) => {
+              return prev + curr.quantity;
+            }, 0),
+          };
+        } else {
+          return {
+            ...state,
+            cart: action.payload.cart,
+          };
+        }
+      }
+
       case "ADD_ITEM": {
         return {
           ...state,
@@ -452,6 +232,7 @@ function App() {
             state.cart.forEach((item, index) => {
               if (item.id === itemObj.id) {
                 itemObj.quantity += item.quantity;
+
                 state.cart.splice(index, 1, itemObj);
               } else {
                 if (state.cart.every((element) => element.id !== itemObj.id)) {
@@ -473,6 +254,7 @@ function App() {
             errorRemoveCart: false,
           };
         }
+
         return {
           ...state,
           successOrder: true,
@@ -520,6 +302,7 @@ function App() {
       // FIXME:DOES NOT REMOVE ITEM FROM ARRAY WHEN IT HAS NO QUANTIY
       case "DECREASE_CART_QUANTITY": {
         const itemID = action.payload.id;
+        const itemPrice = state.items.find((item) => item.id === itemID);
 
         return {
           ...state,
@@ -530,7 +313,6 @@ function App() {
                 if (item.quantity > 0) {
                   item.quantity -= 1;
                 }
-       
               }
               return item;
             }),
@@ -544,6 +326,8 @@ function App() {
       }
       case "INCREASE_CART_QUANTITY": {
         const itemID = action.payload.id;
+        const itemPrice = state.items.find((item) => item.id === itemID);
+
         return {
           ...state,
           items: state.items,
@@ -579,13 +363,12 @@ function App() {
       }
       case "TOTAL_AMOUNT": {
         let sum = 0;
-
         state.cart.forEach((item) => {
-          sum += item.quantity * item.price;
+          sum += item.price * item.quantity;
         });
+
         return {
           ...state,
-
           total: sum,
         };
       }
@@ -629,7 +412,7 @@ function App() {
           errorRemoveCart: false,
         };
       }
-   
+
       case "SORT_ITEMS": {
         const sort = action.payload.sortBy;
 
@@ -725,7 +508,7 @@ function App() {
         };
       }
 
-      case "RESET_ALERTS":{
+      case "RESET_ALERTS": {
         return {
           ...state,
           errorRemove: false,
@@ -743,15 +526,24 @@ function App() {
   };
 
   const [state, dispatch] = useReducer(reducer, initialState);
+  useEffect(() => {
+    axios.get("http://localhost:8080/api/items").then((res) => {
+      dispatch({ type: "DISPLAY_ITEMS", payload: { items: res.data.items } });
+    });
+    axios.get("http://localhost:8080/api/cart").then((res) => {
+      dispatch({ type: "DISPLAY_CART", payload: { cart: res.data.cart } });
+    });
+  }, []);
+
   const handleDrawerOpen = (e) => {
     e.preventDefault();
-    dispatch({type:"RESET_ALERTS"})
+    dispatch({ type: "RESET_ALERTS" });
     setOpen(true);
   };
 
   const handleDrawerClose = (e) => {
     e.preventDefault();
-    dispatch({type:"RESET_ALERTS"})
+    dispatch({ type: "RESET_ALERTS" });
     setOpen(false);
   };
 
@@ -789,21 +581,17 @@ function App() {
             >
               UCHIHA
             </Typography>
-            
-          <Box sx={{display:"flex", gap:"8px", alignItems:"center"}}>
-           
             <IconButton
               aria-label="open drawer"
-             
               onClick={handleDrawerOpen}
               sx={{ ...(open && { display: "none" }) }}
             >
               <CartNotif cartCount={state.cartCount} />
             </IconButton>
-            <Typography>
-               Cart
+
+            <Typography variant="h6" sx={{ ...(open && { display: "none" }) }}>
+              Cart
             </Typography>
-          </Box>
           </Toolbar>
         </AppBar>
         {/* MAIN CONTENT */}
@@ -819,8 +607,7 @@ function App() {
             sx={{
               display: "flex",
               alignItems: "flex-end",
-              gap:'10px',
-              
+              gap: "10px",
             }}
           >
             <SearchItem dispatch={dispatch} searchKey={state.searchKey} />
@@ -843,13 +630,12 @@ function App() {
 
         {/* SIDEBAR */}
         <Drawer
-          
           sx={{
             width: drawerWidth,
 
             flexShrink: 0,
             "& .MuiDrawer-paper": {
-              backgroundImage:"url(./assets/images/swirl_pattern.png)",
+              backgroundImage: "url(./assets/images/swirl_pattern.png)",
               width: drawerWidth,
               padding: "1.25em",
             },
@@ -871,25 +657,46 @@ function App() {
           <Divider />
           {state.cart.length > 0 && (
             <>
-              <Paper elevation={1} sx={{ padding: "1em", marginBottom: "2em" }} >
+              <Paper elevation={1} sx={{ padding: "1em", marginBottom: "2em" }}>
                 <CartList state={state} dispatch={dispatch} />
               </Paper>
               <Divider />
               <Paper elevation={0} sx={{ padding: "1em", marginBottom: "2em" }}>
-                <Stack direction="row" spacing={4} alignItems="flex-end" >
+                <Stack direction="row" spacing={4} alignItems="flex-end">
                   <Typography variant="subTitle1">FIND PROMOTION</Typography>
-                  <Button variant="outlined" color="secondary">Add Coupon</Button>
+                  <Button variant="outlined" color="secondary">
+                    Add Coupon
+                  </Button>
                 </Stack>
               </Paper>
               <Divider />
               <Paper elevation={0} sx={{ padding: "1em", marginTop: "auto" }}>
-              <Typography sx={{display:"flex", justifyContent: "space-between" ,gap:"10px"}} variant="h5" gutterBottom>Total Amount <Stack>{state.total}.00</Stack></Typography>
-                <Button sx={{width:"100%"}} variant="contained" disableElevation color="secondary" size="large">Checkout</Button>
+                <Typography
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    gap: "20px",
+                    fontWeight: "900",
+                  }}
+                  variant="h5"
+                  gutterBottom
+                >
+                  Total Amount: <Stack>{state.total}.00</Stack>
+                </Typography>
+                <Button
+                  sx={{ width: "100%" }}
+                  variant="contained"
+                  disableElevation
+                  color="secondary"
+                  size="large"
+                >
+                  Checkout
+                </Button>
               </Paper>
             </>
           )}
           {!state.cart.length > 0 && (
-            <Box sx={{margin:"auto"}}>
+            <Box sx={{ margin: "auto" }}>
               <EmptyCart />
             </Box>
           )}

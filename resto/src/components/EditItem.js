@@ -23,7 +23,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import EditIcon from "@mui/icons-material/Edit";
 import Tooltip from "@mui/material/Tooltip";
 import { QuestionAnswerOutlined } from "@mui/icons-material";
-
+import axios from "axios";
 const EditItem = ({
   id,
   name,
@@ -85,8 +85,6 @@ const EditItem = ({
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Edit Item Information</DialogTitle>
         <DialogContent>
-          
-
           <Box sx={{ marginBottom: "1em" }}>
             <TextField
               value={edit.category}
@@ -163,25 +161,37 @@ const EditItem = ({
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} sx={{color:"black"}}>Cancel</Button>
+          <Button onClick={handleClose} sx={{ color: "black" }}>
+            Cancel
+          </Button>
           <Button
-           sx={{color:"black"}}
+            sx={{ color: "black" }}
             onClick={() => {
-             
               handleClose();
-              dispatch({
-                type: "EDIT_ITEM",
-                payload: {
+              axios
+                .put(`http://localhost:8080/api/items/${id}`, {
                   id: edit.id,
                   name: edit.name,
                   price: edit.price,
                   category: edit.category,
                   image: edit.image,
                   description: edit.description,
-                },
-              });
-              dispatch({ type: "TOTAL_AMOUNT" });
-              dispatch({ type: "COUNT_CART" });
+                })
+                .then(() => {
+                  dispatch({
+                    type: "EDIT_ITEM",
+                    payload: {
+                      id: edit.id,
+                      name: edit.name,
+                      price: edit.price,
+                      category: edit.category,
+                      image: edit.image,
+                      description: edit.description,
+                    },
+                  });
+                  dispatch({ type: "TOTAL_AMOUNT" });
+                  dispatch({ type: "COUNT_CART" });
+                });
             }}
           >
             Submit

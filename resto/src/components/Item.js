@@ -5,6 +5,7 @@ import ImageListItemBar from "@mui/material/ImageListItemBar";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
+import axios from "axios";
 import {
   Paper,
   IconButton,
@@ -16,7 +17,7 @@ import {
 } from "@mui/material/";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
-import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditItem from "./EditItem";
 import Ratings from "./Ratings";
@@ -35,7 +36,15 @@ const Item = ({
   category,
 }) => {
   return (
-    <Card sx={{ position: "relative", height: "100%", display:"flex", flexDirection:"column" }} elevation={0}>
+    <Card
+      sx={{
+        position: "relative",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+      }}
+      elevation={0}
+    >
       <Box
         sx={{
           position: "absolute",
@@ -61,9 +70,12 @@ const Item = ({
           aria-label="delete item"
           onClick={(e) => {
             {
-              dispatch({ type: "DELETE_ITEM", payload: { id: id } });
-              dispatch({ type: "TOTAL_AMOUNT" });
-              dispatch({ type: "COUNT_CART" });
+              axios.delete(`http://localhost:8080/api/items/${id}`).then(() => {
+                dispatch({ type: "DELETE_ITEM", payload: { id: id } });
+                dispatch({ type: "TOTAL_AMOUNT" });
+                dispatch({ type: "COUNT_CART" });
+              });
+
               e.preventDefault();
             }
           }}
@@ -80,7 +92,7 @@ const Item = ({
         sx={{ borderRadius: "15px" }}
       />
       <CardContent>
-        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Box sx={{ display: "flex", justifyContent: "space-between" ,gap:"10px" }}>
           <Typography
             gutterBottom
             variant="h6"
@@ -113,7 +125,7 @@ const Item = ({
           </>
         )}
       </CardContent>
-      <CardActions sx={{marginTop:"auto"}}>
+      <CardActions sx={{ marginTop: "auto" }}>
         <Stack direction="row" justifyContent="space-between" flexWrap="wrap">
           <Box>
             <Box
@@ -131,10 +143,21 @@ const Item = ({
                   aria-label="send"
                   size="medium"
                   onClick={() => {
-                    dispatch({
-                      type: "DECREASE_QUANTITY",
-                      payload: { id: id },
-                    });
+                    axios
+                      .put(`http://localhost:8080/api/items/quantity/${id}`, {
+                        id: id,
+                        name: name,
+                        price: price,
+                        quantity: quantity - 1,
+                        image: image,
+                        description: description,
+                      })
+                      .then(() => {
+                        dispatch({
+                          type: "DECREASE_QUANTITY",
+                          payload: { id: id },
+                        });
+                      });
                   }}
                 >
                   <RemoveCircleOutlineIcon fontSize="inherit" />
@@ -147,7 +170,22 @@ const Item = ({
                 aria-label="send"
                 size="medium"
                 onClick={() => {
-                  dispatch({ type: "INCREASE_QUANTITY", payload: { id: id } });
+                  axios
+                    .put(`http://localhost:8080/api/items/quantity/${id}`, {
+                      id: id,
+                      name: name,
+                      price: price,
+                      quantity: quantity + 1,
+                      image: image,
+                      description: description,
+                    })
+                    .then((req) => {
+                      console.log(req);
+                      dispatch({
+                        type: "INCREASE_QUANTITY",
+                        payload: { id: id },
+                      });
+                    });
                 }}
               >
                 <AddCircleIcon fontSize="inherit" />
@@ -156,13 +194,15 @@ const Item = ({
           </Box>
           <IconButton
             onClick={(e) => {
-              dispatch({ type: "ORDER_ITEM", payload: { id: id } });
-              dispatch({ type: "TOTAL_AMOUNT" });
-              dispatch({ type: "COUNT_CART" });
-              dispatch({ type: "RESET_QUANTITY", payload: { id: id } });
+              axios.post(`http://localhost:8080/api/cart/${id}`).then(() => {
+                dispatch({ type: "ORDER_ITEM", payload: { id: id } });
+                dispatch({ type: "TOTAL_AMOUNT" });
+                dispatch({ type: "COUNT_CART" });
+                dispatch({ type: "RESET_QUANTITY", payload: { id: id } });
+              });
             }}
           >
-            <AddShoppingCartIcon fontSize="large" color="text" />
+            <ShoppingCartIcon fontSize="large" color="text" />
           </IconButton>
         </Stack>
       </CardActions>

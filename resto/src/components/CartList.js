@@ -2,10 +2,11 @@ import { Box } from "@mui/material";
 import React from "react";
 import Cart from "./Cart";
 
-
 const CartList = ({ state, dispatch }) => {
+  
+  
   return (
-    <Box sx={{height:"400px", overflow:"auto"}} >
+    <Box sx={{ height: "400px", overflow: "auto" }}>
       {state.cart.map((cart) => {
         if (cart.quantity > 0) {
           return (
@@ -16,6 +17,9 @@ const CartList = ({ state, dispatch }) => {
               price={cart.price}
               quantity={cart.quantity}
               image={cart.image}
+              itemPrice={state.items.forEach(
+                (item) => item.id === cart.id && item.price
+              )}
             />
           );
         }
