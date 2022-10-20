@@ -221,16 +221,5 @@
       "ratings": null
     }
   ],
-  "cart": [
-    {
-      "id": "1e",
-      "name": "Grilled Salmon",
-      "category": "bento",
-      "price": 350,
-      "quantity": 9,
-      "description": "",
-      "image": "https://image.entabe.jp/upload/20210714/images/sub3.jpg",
-      "ratings": 2.5
-    }
-  ]
+  "cart": []
 }
