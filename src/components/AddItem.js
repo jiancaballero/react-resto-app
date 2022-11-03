@@ -140,7 +140,7 @@ const AddItem = ({ state, dispatch, id, categories }) => {
       item.image !== "" &&
       !duplicate.length
     ) {
-      axios.post("http://localhost:8080/api/items", item).then((res) => {
+      axios.post("https://react-resto-app-be.herokuapp.com/api/items", item).then((res) => {
         dispatch({ type: "ADD_ITEM", payload: item });
       });
       handleClose();

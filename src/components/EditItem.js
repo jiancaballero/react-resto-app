@@ -169,7 +169,7 @@ const EditItem = ({
             onClick={() => {
               handleClose();
               axios
-                .put(`http://localhost:8080/api/items/${id}`, {
+                .put(`https://react-resto-app-be.herokuapp.com/api/items/${id}`, {
                   id: edit.id,
                   name: edit.name,
                   price: edit.price,

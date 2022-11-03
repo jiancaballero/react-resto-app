@@ -46,7 +46,7 @@ const Cart = ({ id, name, price, quantity, image, dispatch }) => {
                 size="medium"
                 onClick={() => {
                   axios
-                    .put(`http://localhost:8080/api/cart/${id}`, {
+                    .put(`https://react-resto-app-be.herokuapp.com/api/cart/${id}`, {
                       
                       quantity: quantity - 1,
                     })
@@ -68,7 +68,7 @@ const Cart = ({ id, name, price, quantity, image, dispatch }) => {
                 size="medium"
                 onClick={() => {
                   axios
-                    .put(`http://localhost:8080/api/cart/${id}`, {
+                    .put(`https://react-resto-app-be.herokuapp.com/api/cart/${id}`, {
                       
                       quantity: quantity + 1,
                     })
@@ -90,7 +90,7 @@ const Cart = ({ id, name, price, quantity, image, dispatch }) => {
                 aria-label="delete item"
                 onClick={() => {
                   axios
-                    .delete(`http://localhost:8080/api/cart/${id}`).then(()=>{
+                    .delete(`https://react-resto-app-be.herokuapp.com/api/cart/${id}`).then(()=>{
                       dispatch({ type: "DELETE_CART_ITEM", payload: { id: id } });
                       dispatch({ type: "TOTAL_AMOUNT" });
                       dispatch({ type: "COUNT_CART" });
