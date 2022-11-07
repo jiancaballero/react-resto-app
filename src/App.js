@@ -527,10 +527,10 @@ function App() {
 
   const [state, dispatch] = useReducer(reducer, initialState);
   useEffect(() => {
-    axios.get("http://react-resto-app-be.herokuapp.com/api/items").then((res) => {
+    axios.get("https://react-resto-app-be.herokuapp.com/api/items").then((res) => {
       dispatch({ type: "DISPLAY_ITEMS", payload: { items: res.data.items } });
     });
-    axios.get("http://react-resto-app-be.herokuapp.com/api/cart").then((res) => {
+    axios.get("https://react-resto-app-be.herokuapp.com/api/cart").then((res) => {
       dispatch({ type: "DISPLAY_CART", payload: { cart: res.data.cart } });
     });
   }, []);

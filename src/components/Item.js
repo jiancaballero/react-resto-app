@@ -70,7 +70,7 @@ const Item = ({
           aria-label="delete item"
           onClick={(e) => {
             {
-              axios.delete(`http://react-resto-app-be.herokuapp.com/api/items/${id}`).then(() => {
+              axios.delete(`https://react-resto-app-be.herokuapp.com/api/items/${id}`).then(() => {
                 dispatch({ type: "DELETE_ITEM", payload: { id: id } });
                 dispatch({ type: "TOTAL_AMOUNT" });
                 dispatch({ type: "COUNT_CART" });
@@ -144,7 +144,7 @@ const Item = ({
                   size="medium"
                   onClick={() => {
                     axios
-                      .put(`http://react-resto-app-be.herokuapp.com/api/items/quantity/${id}`, {
+                      .put(`https://react-resto-app-be.herokuapp.com/api/items/quantity/${id}`, {
                         id: id,
                         name: name,
                         price: price,
@@ -171,7 +171,7 @@ const Item = ({
                 size="medium"
                 onClick={() => {
                   axios
-                    .put(`http://react-resto-app-be.herokuapp.com/api/items/quantity/${id}`, {
+                    .put(`https://react-resto-app-be.herokuapp.com/api/items/quantity/${id}`, {
                       id: id,
                       name: name,
                       price: price,
@@ -194,7 +194,7 @@ const Item = ({
           </Box>
           <IconButton
             onClick={(e) => {
-              axios.post(`http://react-resto-app-be.herokuapp.com/api/cart/${id}`).then(() => {
+              axios.post(`https://react-resto-app-be.herokuapp.com/api/cart/${id}`).then(() => {
                 dispatch({ type: "ORDER_ITEM", payload: { id: id } });
                 dispatch({ type: "TOTAL_AMOUNT" });
                 dispatch({ type: "COUNT_CART" });
